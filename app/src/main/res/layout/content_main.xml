@@ -11,18 +11,11 @@
 
     <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-                android:id="@+id/infoContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="50dp"
-                android:minHeight="250dp" tools:ignore="MissingConstraints">
-
-        </android.support.v7.widget.CardView>
         <android.support.v7.widget.RecyclerView
+                android:id="@+id/main_recycleview"
                 android:layout_width="match_parent"
                 android:layout_marginTop="50dp"
-                android:layout_height="200dp"/>
+                android:layout_height="400dp"/>
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

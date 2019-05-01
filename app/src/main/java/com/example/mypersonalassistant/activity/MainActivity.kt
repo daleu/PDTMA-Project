@@ -6,18 +6,36 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import com.example.mypersonalassistant.R
+import com.example.mypersonalassistant.adapter.MainRecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private var recyclerView: RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        //RECYCLE VIEW
+        recyclerView = findViewById(R.id.main_recycleview)
+        var adapter = MainRecyclerViewAdapter(generateData())
+        val layoutManager = LinearLayoutManager(applicationContext,LinearLayoutManager.HORIZONTAL,false)
+        recyclerView?.layoutManager = layoutManager
+        recyclerView?.itemAnimator = DefaultItemAnimator()
+        recyclerView?.layoutManager?.scrollToPosition(Integer.MAX_VALUE / 2)
+
+        recyclerView?.adapter = adapter
+        adapter.notifyDataSetChanged()
+
+        //FLOATING BUTTON
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -32,6 +50,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+    }
+
+    private fun generateData(): ArrayList<String> {
+
+        var result = ArrayList<String>()
+
+        for (i in 0..9){
+            result.add("Hello World"+i)
+        }
+
+        return result
+
     }
 
     override fun onBackPressed() {
