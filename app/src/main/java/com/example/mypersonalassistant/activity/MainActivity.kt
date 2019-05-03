@@ -11,20 +11,20 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import com.example.mypersonalassistant.BuildConfig
 import com.example.mypersonalassistant.R
-import com.example.mypersonalassistant.Services.OpenWeatherMapService
+import com.example.mypersonalassistant.service.OpenWeatherMapService
 import com.example.mypersonalassistant.adapter.MainRecyclerViewAdapter
+import com.example.mypersonalassistant.async.MainAsyncTask
+import com.example.mypersonalassistant.model.WeatherModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import java.lang.ref.WeakReference
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var recyclerView: RecyclerView? = null
-    var result: ArrayList<String?> = ArrayList<String?>()
+    var result: ArrayList<WeatherModel> = ArrayList<WeatherModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,39 +58,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        val myTask = MyAsyncTask(adapter)
+        val myTask = MainAsyncTask(adapter)
         myTask.execute()
-
-    }
-
-    class MyAsyncTask(adapter: MainRecyclerViewAdapter) : AsyncTask<Void, String, Void>(){
-
-        var adapter = adapter
-
-        override fun doInBackground(vararg params: Void?): Void? {
-            val service: OpenWeatherMapService = OpenWeatherMapService()
-            val data = service.getCurrentWeatherByCityName("London")
-            publishProgress(data)
-            return null
-        }
-
-        override fun onProgressUpdate(vararg params: String?) {
-            adapter.list.add(params.toString())
-            adapter.notifyDataSetChanged()
-        }
-
-    }
-
-
-    private fun generateData(): ArrayList<String?> {
-
-        var result = ArrayList<String?>()
-
-        for (i in 0..9){
-            result.add(BuildConfig.OpenWeatherMapAPIKey)
-        }
-
-        return result
 
     }
 
