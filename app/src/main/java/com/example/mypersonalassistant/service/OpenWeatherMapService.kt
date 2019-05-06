@@ -18,7 +18,39 @@ class OpenWeatherMapService {
     fun getCurrentWeatherByCityName(city: String): WeatherModel{
 
         val client = OkHttpClient()
-        val request: Request = Request.Builder().url("http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=e2b9357594875a9a24508547112f381c").build()
+        val request: Request = Request.Builder().url("http://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&APPID=$APPID").build()
+        var response: Response? = null
+
+        try {
+            response = client.newCall(request).execute()
+            //return response?.body().toString()
+        } catch (e: IOException){
+            e.printStackTrace()
+        }
+
+        val jsonData = response?.body()?.string()
+        val Jobject  = JSONObject(jsonData)
+
+        //parse Weather Data & create WeatherModel Object
+        val name: String = Jobject.getString("name")
+        val weather: String = Jobject.getJSONArray("weather").getJSONObject(0).getString("main")
+        val description: String = Jobject.getJSONArray("weather").getJSONObject(0).getString("description")
+        val temp: Double = Jobject.getJSONObject("main").getDouble("temp")
+        val windSpeed = Jobject.getJSONObject("wind").getDouble("speed")
+        val sunrise = Jobject.getJSONObject("sys").getInt("sunrise")
+        val sunset = Jobject.getJSONObject("sys").getInt("sunset")
+        val humidity = Jobject.getJSONObject("main").getInt("humidity")
+
+        val currentWeather = WeatherModel(name,temp,sunrise,sunset,humidity,windSpeed,weather,description)
+
+        return currentWeather
+
+    }
+
+    fun getCurrentWeatherByLocation(latitude: Float, longitude: Float): WeatherModel{
+
+        val client = OkHttpClient()
+        val request: Request = Request.Builder().url("http://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&APPID=$APPID").build()
         var response: Response? = null
 
         try {
