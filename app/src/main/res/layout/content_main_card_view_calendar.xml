@@ -15,7 +15,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:id="@+id/headerLayout"
-                android:background="@android:color/holo_blue_dark">
+                android:background="@color/holo_blue_dark">
 
             <ImageView
                     android:id="@+id/weatherHeaderMainCardImageView"
@@ -52,7 +52,9 @@
                 android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:text="@string/explore"
-                android:background="@color/wallet_holo_blue_light"
+                android:background="@color/holo_blue_dark"
+                android:textColor="@color/white"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_below="@+id/calendarView" android:layout_marginTop="50dp"
                 android:layout_alignParentStart="true" android:layout_marginLeft="125dp"
                 android:layout_marginStart="125dp"
