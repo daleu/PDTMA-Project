@@ -1,5 +1,6 @@
 package com.example.mypersonalassistant.adapter
 
+import android.annotation.SuppressLint
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import java.util.*
 
 class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerView.Adapter<MainRecyclerViewAdapter.MainInfoViewHolder>(){
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MainInfoViewHolder, position: Int) {
         val weather = list[position % list.size]
 
@@ -25,7 +27,7 @@ class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerView.
         if(day) holder.cardImageViewTitleWeather.setImageResource(R.drawable.ic_day)
         else holder.cardImageViewTitleWeather.setImageResource(R.drawable.ic_night)
 
-        holder.tempratureText.text = weather.temp.toString() + " Cº"
+        holder.tempratureText.text = weather.temp.toString() + " ºC"
         if(weather.temp>10) holder.tempratureImage.setImageResource(R.drawable.ic_hot)
         else holder.tempratureImage.setImageResource(R.drawable.ic_cold)
 
