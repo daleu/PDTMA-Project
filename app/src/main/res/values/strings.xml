@@ -17,4 +17,6 @@
     <color name="holo_blue_dark">#ff0099cc</color>
     <color name="white">#ffffffff</color>
     <string name="title_activity_weather">WeatherActivity</string>
+    <string name="title_activity_calendar">CalendarActivity</string>
+    <string name="title_activity_to_do">ToDoActivity</string>
 </resources>

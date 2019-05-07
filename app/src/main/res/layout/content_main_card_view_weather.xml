@@ -160,6 +160,7 @@
                 android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:text="@string/explore"
+                android:id="@+id/explore"
                 android:textColor="@color/white"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:background="@color/holo_orange_dark"

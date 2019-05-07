@@ -1,21 +1,27 @@
 package com.example.mypersonalassistant.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.mypersonalassistant.R
+import com.example.mypersonalassistant.activity.CalendarActivity
+import com.example.mypersonalassistant.activity.WeatherActivity
 import com.example.mypersonalassistant.model.WeatherModel
 import java.util.*
 
 
 
 
-class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>, val context:Context ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -67,9 +73,18 @@ class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerView.
             }
 
             holderWeather.weatherConditionMain.text = "("+weather.description+")"
+
+            holderWeather.button.setOnClickListener {
+                val intent = Intent(context, WeatherActivity::class.java)
+                context.startActivity(intent)
+            }
         }
         else {
             var holderCalendar: MainInfoViewCalendarHolder = holder as MainInfoViewCalendarHolder
+            holderCalendar.button.setOnClickListener {
+                val intent = Intent(context, CalendarActivity::class.java)
+                context.startActivity(intent)
+            }
         }
 
     }
@@ -98,9 +113,12 @@ class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerView.
 
     class MainInfoViewCalendarHolder(view: View) : RecyclerView.ViewHolder(view) {
         var cv: CardView
+        var button: Button
 
         init {
             cv = view.findViewById(R.id.calendar_card_view)
+
+            button = itemView.findViewById(R.id.explore)
         }
     }
 
@@ -123,6 +141,8 @@ class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerView.
         var currentWeatherMainImage: ImageView
         var weatherConditionMain: TextView
 
+        var button: Button
+
         init{
             cv = view.findViewById(R.id.weather_card_view)
 
@@ -140,6 +160,8 @@ class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerView.
 
             currentWeatherMainImage = itemView.findViewById(R.id.currentWeatherMainImage)
             weatherConditionMain = itemView.findViewById(R.id.weatherConditionMain)
+
+            button = itemView.findViewById(R.id.explore)
         }
 
     }

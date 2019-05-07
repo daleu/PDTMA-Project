@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         //RECYCLE VIEW
         recyclerView = findViewById(R.id.main_recycleview)
-        adapter = MainRecyclerViewAdapter(result)
+        adapter = MainRecyclerViewAdapter(result, this)
         layoutManager = LinearLayoutManager(applicationContext,LinearLayoutManager.HORIZONTAL,false)
         recyclerView?.layoutManager = layoutManager
         recyclerView?.itemAnimator = DefaultItemAnimator()
@@ -250,14 +250,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_weather -> {
-                //val intent = Intent(this, WeatherActivity::class.java)
-                //startActivity(intent)
+                val intent = Intent(this, WeatherActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_calendar -> {
-
+                val intent = Intent(this, CalendarActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_to_do -> {
-
+                val intent = Intent(this, ToDoActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_share -> {
 
