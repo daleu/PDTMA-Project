@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var result: ArrayList<WeatherModel> = ArrayList<WeatherModel>()
     lateinit var adapter: MainRecyclerViewAdapter
     lateinit var myTask: MainAsyncTask
+    lateinit var layoutManager: LinearLayoutManager
 
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
     internal lateinit var mLocationRequest: LocationRequest
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //RECYCLE VIEW
         recyclerView = findViewById(R.id.main_recycleview)
         adapter = MainRecyclerViewAdapter(result)
-        val layoutManager = LinearLayoutManager(applicationContext,LinearLayoutManager.HORIZONTAL,false)
+        layoutManager = LinearLayoutManager(applicationContext,LinearLayoutManager.HORIZONTAL,false)
         recyclerView?.layoutManager = layoutManager
         recyclerView?.itemAnimator = DefaultItemAnimator()
         recyclerView?.layoutManager?.scrollToPosition(Integer.MAX_VALUE / 2)
@@ -187,7 +188,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mLastLocation = location
         mLastLocationTime = Calendar.getInstance().time
 
-        myTask = MainAsyncTask(adapter, location)
+        myTask = MainAsyncTask(adapter, layoutManager, location)
         myTask.execute()
     }
 

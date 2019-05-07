@@ -10,12 +10,12 @@
 
     <RelativeLayout
             android:layout_width="350dp"
-            android:layout_height="500dp">
+            android:layout_height="450dp">
 
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:id="@+id/headerLayout"
                 android:background="@color/holo_orange_dark">
 
@@ -35,13 +35,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         android:textColor="@android:color/white"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="3dp"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                         app:fontFamily="sans-serif"/>
                 <TextView
                         android:id="@+id/weatherConditionMain"
                         android:textColor="@android:color/white"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="-3dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                 />
@@ -163,7 +163,7 @@
                 android:textColor="@color/white"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:background="@color/holo_orange_dark"
-                android:layout_below="@+id/contentLayout" android:layout_marginTop="50dp"
+                android:layout_below="@+id/contentLayout" android:layout_marginTop="10dp"
                 android:layout_alignParentStart="true" android:layout_marginLeft="125dp"
                 android:layout_marginStart="125dp"
                 android:layout_alignParentLeft="true"/>
