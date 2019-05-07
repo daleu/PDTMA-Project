@@ -75,8 +75,7 @@ class MainRecyclerLastQueryViewAdapter(val list: ArrayList<QueryModel>) : Recycl
     }
 
     override fun getItemCount(): Int {
-        if(list.size==0) return 0
-        else return Integer.MAX_VALUE
+        return list.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

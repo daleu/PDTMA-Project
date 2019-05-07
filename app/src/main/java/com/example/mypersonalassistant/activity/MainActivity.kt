@@ -84,7 +84,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         layoutManagerLastQuery = LinearLayoutManager(applicationContext,LinearLayoutManager.HORIZONTAL,false)
         recyclerViewLastQuery?.layoutManager = layoutManagerLastQuery
         recyclerViewLastQuery?.itemAnimator = DefaultItemAnimator()
-        recyclerViewLastQuery?.layoutManager?.scrollToPosition(Integer.MAX_VALUE / 2)
 
         recyclerViewLastQuery?.adapter = adapterLastQuery
         adapterLastQuery.notifyDataSetChanged()
@@ -104,6 +103,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+        nav_view.itemIconTintList = null
 
         Log.i("Location","Before Request")
         mLocationRequest = LocationRequest()
@@ -249,16 +249,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_camera -> {
-                // Handle the camera action
+            R.id.nav_weather -> {
+                //val intent = Intent(this, WeatherActivity::class.java)
+                //startActivity(intent)
             }
-            R.id.nav_gallery -> {
+            R.id.nav_calendar -> {
 
             }
-            R.id.nav_slideshow -> {
-
-            }
-            R.id.nav_manage -> {
+            R.id.nav_to_do -> {
 
             }
             R.id.nav_share -> {

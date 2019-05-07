@@ -17,9 +17,19 @@
                 android:layout_marginTop="10dp"
                 android:layout_height="450dp"/>
 
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/last_queries"
+                android:layout_below="@+id/main_recycleview"
+                android:id="@+id/lastQueryTitle"
+                android:layout_marginLeft="10dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                app:fontFamily="sans-serif" android:layout_marginStart="10dp"/>
+
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/main_lastquery_recycleview"
-                android:layout_below="@+id/main_recycleview"
+                android:layout_below="@+id/lastQueryTitle"
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
                 android:layout_height="180dp"/>
