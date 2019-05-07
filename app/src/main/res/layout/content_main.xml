@@ -17,16 +17,12 @@
                 android:layout_marginTop="10dp"
                 android:layout_height="450dp"/>
 
-        <android.support.v7.widget.CardView
-                xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/lastquerie"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                tools:ignore="MissingConstraints"
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/main_lastquery_recycleview"
                 android:layout_below="@+id/main_recycleview"
-                xmlns:tools="http://schemas.android.com/tools"
-                xmlns:android="http://schemas.android.com/apk/res/android">
-        </android.support.v7.widget.CardView>
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="180dp"/>
 
     </RelativeLayout>
 

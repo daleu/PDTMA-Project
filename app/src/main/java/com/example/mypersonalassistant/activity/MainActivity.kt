@@ -27,9 +27,11 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.example.mypersonalassistant.BuildConfig
 import com.example.mypersonalassistant.R
+import com.example.mypersonalassistant.adapter.MainRecyclerLastQueryViewAdapter
 import com.example.mypersonalassistant.service.OpenWeatherMapService
 import com.example.mypersonalassistant.adapter.MainRecyclerViewAdapter
 import com.example.mypersonalassistant.async.MainAsyncTask
+import com.example.mypersonalassistant.model.QueryModel
 import com.example.mypersonalassistant.model.WeatherModel
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -42,6 +44,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var recyclerView: RecyclerView? = null
     var result: ArrayList<WeatherModel> = ArrayList<WeatherModel>()
     lateinit var adapter: MainRecyclerViewAdapter
+    lateinit var layoutManagerLastQuery: LinearLayoutManager
+
+    private var recyclerViewLastQuery: RecyclerView? = null
+    var resultLastQuery: ArrayList<QueryModel> = ArrayList<QueryModel>()
+    lateinit var adapterLastQuery: MainRecyclerLastQueryViewAdapter
     lateinit var myTask: MainAsyncTask
     lateinit var layoutManager: LinearLayoutManager
 
@@ -71,6 +78,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         recyclerView?.adapter = adapter
         adapter.notifyDataSetChanged()
 
+        //RECYCLE VIEW LAST QUERy
+        recyclerViewLastQuery = findViewById(R.id.main_lastquery_recycleview)
+        adapterLastQuery = MainRecyclerLastQueryViewAdapter(generateDataLastQuery())
+        layoutManagerLastQuery = LinearLayoutManager(applicationContext,LinearLayoutManager.HORIZONTAL,false)
+        recyclerViewLastQuery?.layoutManager = layoutManagerLastQuery
+        recyclerViewLastQuery?.itemAnimator = DefaultItemAnimator()
+        recyclerViewLastQuery?.layoutManager?.scrollToPosition(Integer.MAX_VALUE / 2)
+
+        recyclerViewLastQuery?.adapter = adapterLastQuery
+        adapterLastQuery.notifyDataSetChanged()
+
         //FLOATING BUTTON
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -97,6 +115,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if(checkPermissionForLocation(this)){
             startLocationUpdates()
         }
+    }
+
+    fun generateDataLastQuery(): ArrayList<QueryModel> {
+        var queries = ArrayList<QueryModel>()
+        var query = QueryModel(1,"Check Weather","bla bla","weather")
+        var query2 = QueryModel(1,"Check Calendar","bla bla","calendar")
+        var query3 = QueryModel(1,"Check To Do List","bla bla","todo")
+        queries.add(query)
+        queries.add(query2)
+        queries.add(query3)
+
+        return queries
     }
 
     fun checkPermissionForLocation(context: Context): Boolean {
