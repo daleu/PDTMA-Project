@@ -61,7 +61,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val FASTEST_INTERVAL: Long = 1000
 
 
-    @SuppressLint("MissingPermission", "RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -132,13 +131,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun checkPermissionForLocation(context: Context): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            if (context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED) {
+            if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED) {
                 true
             } else {
                 // Show the permission request
-                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION),
-                    REQUEST_PERMISSION_LOCATION)
+                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                        REQUEST_PERMISSION_LOCATION)
                 false
             }
         } else {
@@ -150,18 +149,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
-            .setCancelable(false)
-            .setPositiveButton("Yes") { dialog, id ->
-                startActivityForResult(
-                    Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    , 11)
-            }
-            .setNegativeButton("No") { dialog, id ->
-                dialog.cancel()
-                finish()
-            }
+                .setCancelable(false)
+                .setPositiveButton("Yes") { dialog, id ->
+                    startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                            , 11)
+                }
+                .setNegativeButton("No") { dialog, id ->
+                    dialog.cancel()
+                    finish()
+                }
         val alert: AlertDialog = builder.create()
         alert.show()
+
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -192,10 +192,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+
             return
         }
-        mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper())
+        mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback,
+                Looper.myLooper())
     }
 
     private val mLocationCallback = object : LocationCallback() {
