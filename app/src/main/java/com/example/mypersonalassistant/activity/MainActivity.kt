@@ -41,17 +41,20 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    //RECYCLE VIEW DETAIL
     private var recyclerView: RecyclerView? = null
     var result: ArrayList<WeatherModel> = ArrayList<WeatherModel>()
     lateinit var adapter: MainRecyclerViewAdapter
     lateinit var layoutManagerLastQuery: LinearLayoutManager
 
+    //RECYCLE VIEW QUERIES
     private var recyclerViewLastQuery: RecyclerView? = null
     var resultLastQuery: ArrayList<QueryModel> = ArrayList<QueryModel>()
     lateinit var adapterLastQuery: MainRecyclerLastQueryViewAdapter
     lateinit var myTask: MainAsyncTask
     lateinit var layoutManager: LinearLayoutManager
 
+    //LOCATION
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
     internal lateinit var mLocationRequest: LocationRequest
     lateinit var mLastLocation: Location
