@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/weather_card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        tools:ignore="MissingConstraints"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+            android:layout_width="390dp"
+            android:layout_height="200dp">
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/headerLayout"
+                android:background="@color/holo_orange_dark">
+
+            <ImageView
+                    android:id="@+id/weatherHeaderMainCardImageView"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"/>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <TextView
+                        android:id="@+id/weatherHeaderMainCardtextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:textColor="@android:color/white"
+                        android:layout_marginTop="3dp"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                        app:fontFamily="sans-serif"/>
+                <TextView
+                        android:id="@+id/weatherConditionMain"
+                        android:textColor="@android:color/white"
+                        android:layout_marginTop="-3dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_marginTop="5dp"
+                android:id="@+id/contentLayout"
+                android:layout_below="@+id/headerLayout"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="295dp"
+                android:weightSum="100">
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_weight="40"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                            android:id="@+id/tempratureMainImage"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="5dp"/>
+
+                    <TextView
+                            android:text="Temperature: "
+                            android:layout_marginTop="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:id="@+id/tempratureMainText"
+                            android:layout_marginTop="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                    />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                            android:id="@+id/humidityMainImage"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="5dp"/>
+
+                    <TextView
+                            android:text="Humidity: "
+                            android:layout_marginTop="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:id="@+id/humidityMainText"
+                            android:layout_marginTop="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                    />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                            android:id="@+id/windMainImage"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="5dp"/>
+
+                    <TextView
+                            android:text="Wind Speed: "
+                            android:layout_marginTop="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:id="@+id/windMainText"
+                            android:layout_marginTop="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                    />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_weight="60"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <ImageView
+                        android:layout_margin="10dp"
+                        android:id="@+id/currentWeatherMainImage"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
