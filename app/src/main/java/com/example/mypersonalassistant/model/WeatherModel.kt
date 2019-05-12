@@ -1,5 +1,7 @@
 package com.example.mypersonalassistant.model
 
+import java.util.*
+
 class WeatherModel {
     var name: String // Contains the name of the location (current location or current city)
         get() = field
@@ -43,7 +45,13 @@ class WeatherModel {
             field = value
         }
 
-    constructor(name: String, temp: Double, sunrise: Int, sunset:Int, humidity: Int, windSpeed: Double, weather: String, description: String ){
+    var date: Int
+        get() = field
+        set(value) {
+            field = value
+        }
+
+    constructor(name: String, temp: Double, sunrise: Int, sunset:Int, humidity: Int, windSpeed: Double, weather: String, description: String, date: Int ){
         this.name = name
         this.temp = temp
         this.sunrise = sunrise
@@ -52,5 +60,6 @@ class WeatherModel {
         this.windSpeed = windSpeed
         this.weather = weather
         this.description = description
+        this.date = date
     }
 }

@@ -8,20 +8,22 @@ import com.example.mypersonalassistant.adapter.WeatherRecyclerViewAdapter
 import com.example.mypersonalassistant.model.WeatherModel
 import com.example.mypersonalassistant.service.OpenWeatherMapService
 
-class WeatherAsyncTask(adapter: WeatherRecyclerViewAdapter, location: Location) : AsyncTask<Void, WeatherModel, Void>(){
+class WeatherAsyncTask(adapter: WeatherRecyclerViewAdapter, location: Location) : AsyncTask<Void, ArrayList<WeatherModel>, Void>(){
 
     private var adapter = adapter
     private var location = location
 
     override fun doInBackground(vararg params: Void?): Void? {
         val service = OpenWeatherMapService()
-        val data: WeatherModel = service.getCurrentWeatherByLocation(location.latitude.toFloat(),location.longitude.toFloat())
+        val data: ArrayList<WeatherModel> = service.getPredictionWeatherByLocation(location.latitude.toFloat(),location.longitude.toFloat())
         publishProgress(data)
         return null
     }
 
-    override fun onProgressUpdate(vararg params: WeatherModel) {
-        adapter.list.add(params.get(0))
+    override fun onProgressUpdate(vararg params: ArrayList<WeatherModel>) {
+        for(i in 0 until params[0].size){
+            adapter.list.add(params[0][i])
+        }
         adapter.notifyDataSetChanged()
     }
 }
