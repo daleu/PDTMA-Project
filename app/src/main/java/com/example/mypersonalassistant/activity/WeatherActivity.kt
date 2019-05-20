@@ -8,13 +8,17 @@ import android.os.Looper
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.widget.ImageView
+import android.widget.TextView
 import com.example.mypersonalassistant.R
 import com.example.mypersonalassistant.adapter.MainRecyclerLastQueryViewAdapter
 import com.example.mypersonalassistant.adapter.MainRecyclerViewAdapter
 import com.example.mypersonalassistant.adapter.WeatherRecyclerViewAdapter
+import com.example.mypersonalassistant.async.CurrentWeatherAsyncTask
 import com.example.mypersonalassistant.async.MainAsyncTask
 import com.example.mypersonalassistant.async.WeatherAsyncTask
 import com.example.mypersonalassistant.model.QueryModel
@@ -27,6 +31,29 @@ import java.util.*
 
 class WeatherActivity : AppCompatActivity() {
 
+    //CURRENT WEATHER CARD
+    lateinit var cv: CardView
+
+    lateinit var cardTitleViewWeather: TextView
+    lateinit var cardImageViewTitleWeather: ImageView
+
+    lateinit var tempratureText: TextView
+    lateinit var tempratureImage: ImageView
+
+    lateinit var humidityText: TextView
+    lateinit var humidityImage: ImageView
+
+    lateinit var windText: TextView
+    lateinit var windImage: ImageView
+
+    lateinit var currentWeatherMainImage: ImageView
+    lateinit var weatherConditionMain: TextView
+
+    lateinit var weatherDate: TextView
+
+    lateinit var myCurrentWeatherTask: CurrentWeatherAsyncTask
+
+    //RECYCLE VIEW
     private var recyclerView: RecyclerView? = null
     var result: ArrayList<WeatherModel> = ArrayList<WeatherModel>()
     lateinit var adapter: WeatherRecyclerViewAdapter
@@ -46,6 +73,26 @@ class WeatherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather)
         setSupportActionBar(toolbar)
+
+        //CURRENT WEATHER
+        cv = findViewById(R.id.currentWeatherCard)
+
+        cardTitleViewWeather = findViewById(R.id.weatherHeaderMainCardtextView)
+        cardImageViewTitleWeather = findViewById(R.id.weatherHeaderMainCardImageView)
+
+        tempratureText = findViewById(R.id.tempratureMainText)
+        tempratureImage = findViewById(R.id.tempratureMainImage)
+
+        humidityText = findViewById(R.id.humidityMainText)
+        humidityImage = findViewById(R.id.humidityMainImage)
+
+        windText = findViewById(R.id.windMainText)
+        windImage = findViewById(R.id.windMainImage)
+
+        currentWeatherMainImage = findViewById(R.id.currentWeatherMainImage)
+        weatherConditionMain = findViewById(R.id.weatherConditionMain)
+
+        weatherDate = findViewById(R.id.weatherDate)
 
         //RECYCLE VIEW
         recyclerView = findViewById(R.id.weather_recycleview)
@@ -117,6 +164,21 @@ class WeatherActivity : AppCompatActivity() {
 
         myTask = WeatherAsyncTask(adapter, location)
         myTask.execute()
+
+        myCurrentWeatherTask = CurrentWeatherAsyncTask(
+                cv,
+                cardTitleViewWeather,
+                cardImageViewTitleWeather,
+                tempratureText,tempratureImage,
+                humidityText,
+                humidityImage,
+                windText,
+                windImage,
+                currentWeatherMainImage,
+                weatherConditionMain,
+                weatherDate,
+                location)
+        myCurrentWeatherTask.execute()
     }
 
     override fun onSupportNavigateUp(): Boolean {
