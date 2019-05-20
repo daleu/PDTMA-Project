@@ -19,4 +19,6 @@
     <string name="title_activity_weather">WeatherActivity</string>
     <string name="title_activity_calendar">CalendarActivity</string>
     <string name="title_activity_to_do">ToDoActivity</string>
+    <string name="current_weather">Current Weather</string>
+    <string name="weahter_forecast">Weahter Forecast</string>
 </resources>
