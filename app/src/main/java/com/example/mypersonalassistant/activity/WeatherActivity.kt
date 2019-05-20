@@ -15,43 +15,40 @@ import android.support.v7.widget.RecyclerView
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.mypersonalassistant.R
-import com.example.mypersonalassistant.adapter.MainRecyclerLastQueryViewAdapter
-import com.example.mypersonalassistant.adapter.MainRecyclerViewAdapter
 import com.example.mypersonalassistant.adapter.WeatherRecyclerViewAdapter
 import com.example.mypersonalassistant.async.CurrentWeatherAsyncTask
-import com.example.mypersonalassistant.async.MainAsyncTask
 import com.example.mypersonalassistant.async.WeatherAsyncTask
-import com.example.mypersonalassistant.model.QueryModel
 import com.example.mypersonalassistant.model.WeatherModel
 import com.google.android.gms.location.*
-
 import kotlinx.android.synthetic.main.activity_weather.*
 import java.util.*
+import android.widget.LinearLayout
+import android.support.design.widget.FloatingActionButton
+import android.view.View
+import android.view.Menu
 
 
 class WeatherActivity : AppCompatActivity() {
 
     //CURRENT WEATHER CARD
     lateinit var cv: CardView
-
     lateinit var cardTitleViewWeather: TextView
     lateinit var cardImageViewTitleWeather: ImageView
-
     lateinit var tempratureText: TextView
     lateinit var tempratureImage: ImageView
-
     lateinit var humidityText: TextView
     lateinit var humidityImage: ImageView
-
     lateinit var windText: TextView
     lateinit var windImage: ImageView
-
     lateinit var currentWeatherMainImage: ImageView
     lateinit var weatherConditionMain: TextView
-
     lateinit var weatherDate: TextView
-
     lateinit var myCurrentWeatherTask: CurrentWeatherAsyncTask
+
+    var fabExpanded = false
+    var fabSettings: FloatingActionButton? = null
+    var layoutFabChange: LinearLayout? = null
+    var layoutFabAdd: LinearLayout? = null
 
     //RECYCLE VIEW
     private var recyclerView: RecyclerView? = null
@@ -112,6 +109,18 @@ class WeatherActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
+        fabSettings = this.findViewById(R.id.fabSettings) as FloatingActionButton
+        layoutFabChange = this.findViewById(R.id.layoutFabChange)
+        layoutFabAdd = this.findViewById(R.id.layoutFabAdd)
+
+        fabSettings!!.setOnClickListener {
+            if (fabExpanded === true) {
+                closeSubMenusFab()
+            } else {
+                openSubMenusFab()
+            }
+        }
+        closeSubMenusFab()
         startLocationUpdates()
     }
 
@@ -184,6 +193,22 @@ class WeatherActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    private fun closeSubMenusFab() {
+        layoutFabChange?.visibility = View.INVISIBLE
+        layoutFabAdd?.visibility = View.INVISIBLE
+        fabSettings?.setImageResource(R.drawable.ic_settings_work_tool)
+        fabExpanded = false
+    }
+
+    //Opens FAB submenus
+    private fun openSubMenusFab() {
+        layoutFabAdd?.visibility = View.VISIBLE
+        layoutFabChange?.visibility = View.VISIBLE
+        //Change settings icon to 'X' icon
+        fabSettings?.setImageResource(R.drawable.ic_cancel_music)
+        fabExpanded = true
     }
 
 }

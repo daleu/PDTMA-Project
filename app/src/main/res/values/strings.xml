@@ -21,4 +21,6 @@
     <string name="title_activity_to_do">ToDoActivity</string>
     <string name="current_weather">Current Weather</string>
     <string name="weahter_forecast">Weahter Forecast</string>
+    <string name="change_location">Change Location</string>
+    <string name="add_location">Add Location</string>
 </resources>
