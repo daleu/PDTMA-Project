@@ -17,13 +17,11 @@ import com.example.mypersonalassistant.activity.CalendarActivity
 import com.example.mypersonalassistant.activity.WeatherActivity
 import com.example.mypersonalassistant.model.WeatherModel
 import java.util.*
-
-
-
+import java.text.SimpleDateFormat
 
 class WeatherRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val weather = list[position % list.size]
 
@@ -73,6 +71,10 @@ class WeatherRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerVi
 
         holderWeather.weatherConditionMain.text = "("+weather.description+")"
 
+        val d = Date(weather.date.toLong() * 1000)
+        val f = SimpleDateFormat("dd/MM/yyyy HH:mm'h'")
+        holderWeather.weatherDate.text = f.format(d)
+
     }
 
     override fun getItemCount(): Int {
@@ -103,6 +105,8 @@ class WeatherRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerVi
         var currentWeatherMainImage: ImageView
         var weatherConditionMain: TextView
 
+        var weatherDate: TextView
+
         init{
             cv = view.findViewById(R.id.weather_card_view)
 
@@ -120,6 +124,8 @@ class WeatherRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerVi
 
             currentWeatherMainImage = itemView.findViewById(R.id.currentWeatherMainImage)
             weatherConditionMain = itemView.findViewById(R.id.weatherConditionMain)
+
+            weatherDate = itemView.findViewById(R.id.weatherDate)
 
         }
 

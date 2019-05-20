@@ -38,13 +38,28 @@
                         android:layout_marginTop="3dp"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                         app:fontFamily="sans-serif"/>
-                <TextView
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="100">
+                    <TextView
                         android:id="@+id/weatherConditionMain"
+                        android:textColor="@android:color/white"
+                        android:layout_marginTop="-3dp"
+                        android:layout_weight="50"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        />
+                    <TextView
+                        android:id="@+id/weatherDate"
+                        android:layout_weight="50"
                         android:textColor="@android:color/white"
                         android:layout_marginTop="-3dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                />
+                        />
+                </LinearLayout>
 
             </LinearLayout>
 
