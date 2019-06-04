@@ -41,7 +41,7 @@
                 android:id="@+id/cvtChange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_location"
+                android:text="@string/change_location"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold"
                 android:paddingRight="@dimen/cardview_horizontal_padding"
@@ -87,7 +87,7 @@
                 android:paddingTop="@dimen/cardview_vertical_padding"
                 android:paddingRight="@dimen/cardview_horizontal_padding"
                 android:paddingBottom="@dimen/cardview_vertical_padding"
-                android:text="@string/change_location"
+                android:text="@string/add_location"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold" />
 

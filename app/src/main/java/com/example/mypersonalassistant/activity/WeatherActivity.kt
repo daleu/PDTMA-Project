@@ -1,6 +1,9 @@
 package com.example.mypersonalassistant.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -19,15 +22,17 @@ import com.example.mypersonalassistant.adapter.WeatherRecyclerViewAdapter
 import com.example.mypersonalassistant.async.CurrentWeatherAsyncTask
 import com.example.mypersonalassistant.async.WeatherAsyncTask
 import com.example.mypersonalassistant.model.WeatherModel
-import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_weather.*
 import java.util.*
 import android.widget.LinearLayout
 import android.support.design.widget.FloatingActionButton
+import android.support.v7.app.AlertDialog
 import android.view.View
-import android.view.Menu
+import android.widget.EditText
+import com.google.android.gms.location.*
 
 
+@Suppress("DEPRECATED_IDENTITY_EQUALS")
 class WeatherActivity : AppCompatActivity() {
 
     //CURRENT WEATHER CARD
@@ -47,6 +52,8 @@ class WeatherActivity : AppCompatActivity() {
 
     var fabExpanded = false
     var fabSettings: FloatingActionButton? = null
+    var fabChangeLocation: FloatingActionButton? = null
+    var fabNewLocation: FloatingActionButton? = null
     var layoutFabChange: LinearLayout? = null
     var layoutFabAdd: LinearLayout? = null
 
@@ -66,6 +73,7 @@ class WeatherActivity : AppCompatActivity() {
     private val INTERVAL: Long = 2000
     private val FASTEST_INTERVAL: Long = 1000
 
+    @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather)
@@ -110,6 +118,8 @@ class WeatherActivity : AppCompatActivity() {
         }
 
         fabSettings = this.findViewById(R.id.fabSettings) as FloatingActionButton
+        fabChangeLocation = this.findViewById(R.id.fabChange)
+        fabNewLocation = this.findViewById(R.id.fabAdd)
         layoutFabChange = this.findViewById(R.id.layoutFabChange)
         layoutFabAdd = this.findViewById(R.id.layoutFabAdd)
 
@@ -121,6 +131,50 @@ class WeatherActivity : AppCompatActivity() {
             }
         }
         closeSubMenusFab()
+
+        fabChangeLocation!!.setOnClickListener {
+
+        }
+
+        fabNewLocation!!.setOnClickListener {
+            val inflater = this.layoutInflater
+            val layout:View = inflater.inflate(R.layout.dialog_add_city,null)
+            val newLocation:EditText = layout.findViewById(R.id.newLocation)
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Add Location")
+                .setView(layout)
+                .setNegativeButton("No") { dialog, id ->
+                    dialog.cancel()
+                }
+                .setPositiveButton("Add") { dialog, id ->
+                    val pref = getSharedPreferences("Cities",Context.MODE_PRIVATE).edit()
+                    pref.putString(newLocation.text.toString(),newLocation.text.toString())
+                    val prefGen = getSharedPreferences("General", ContextWrapper.MODE_PRIVATE).edit()
+                    prefGen.putString("selectedLocation",newLocation.text.toString())
+                    /*myTask = WeatherAsyncTask(adapter, null, newLocation.text.toString())
+                    myTask.execute()*/
+
+                    myCurrentWeatherTask = CurrentWeatherAsyncTask(
+                        cv,
+                        cardTitleViewWeather,
+                        cardImageViewTitleWeather,
+                        tempratureText,tempratureImage,
+                        humidityText,
+                        humidityImage,
+                        windText,
+                        windImage,
+                        currentWeatherMainImage,
+                        weatherConditionMain,
+                        weatherDate,
+                        null,
+                        newLocation.text.toString())
+                    myCurrentWeatherTask.execute()
+                    dialog.cancel()
+                }
+            val alert: AlertDialog = builder.create()
+            alert.show()
+        }
+
         startLocationUpdates()
     }
 
@@ -143,8 +197,6 @@ class WeatherActivity : AppCompatActivity() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         // new Google API SDK v11 uses getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-
             return
         }
         mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback,
@@ -186,7 +238,8 @@ class WeatherActivity : AppCompatActivity() {
                 currentWeatherMainImage,
                 weatherConditionMain,
                 weatherDate,
-                location)
+                location,
+            null)
         myCurrentWeatherTask.execute()
     }
 

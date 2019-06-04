@@ -3,37 +3,42 @@ package com.example.mypersonalassistant.async
 import android.location.Location
 import android.os.AsyncTask
 import android.support.v7.widget.CardView
-import android.support.v7.widget.LinearLayoutManager
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.mypersonalassistant.R
-import com.example.mypersonalassistant.adapter.MainRecyclerViewAdapter
-import com.example.mypersonalassistant.adapter.WeatherRecyclerViewAdapter
 import com.example.mypersonalassistant.model.WeatherModel
 import com.example.mypersonalassistant.service.OpenWeatherMapService
 import java.text.SimpleDateFormat
 import java.util.*
 
 class CurrentWeatherAsyncTask(
-        private var cv: CardView,
-        private var cardTitleViewWeather: TextView,
-        private var cardImageViewTitleWeather: ImageView,
-        private var tempratureText: TextView,
-        private var tempratureImage: ImageView,
-        private var humidityText: TextView,
-        private var humidityImage: ImageView,
-        private var windText: TextView,
-        private var windImage: ImageView,
-        private var currentWeatherMainImage: ImageView,
-        private var weatherConditionMain: TextView,
-        private var weatherDate: TextView,
-        location: Location) : AsyncTask<Void, WeatherModel, Void>(){
+    private var cv: CardView,
+    private var cardTitleViewWeather: TextView,
+    private var cardImageViewTitleWeather: ImageView,
+    private var tempratureText: TextView,
+    private var tempratureImage: ImageView,
+    private var humidityText: TextView,
+    private var humidityImage: ImageView,
+    private var windText: TextView,
+    private var windImage: ImageView,
+    private var currentWeatherMainImage: ImageView,
+    private var weatherConditionMain: TextView,
+    private var weatherDate: TextView,
+    location: Location?,
+    locationString: String?) : AsyncTask<Void, WeatherModel, Void>(){
 
     private var location = location
+    private var locationString = locationString
 
     override fun doInBackground(vararg params: Void?): Void? {
         val service = OpenWeatherMapService()
-        val data: WeatherModel = service.getCurrentWeatherByLocation(location.latitude.toFloat(),location.longitude.toFloat())
+        val data: WeatherModel
+        if(location==null){
+            data = service.getCurrentWeatherByCityName(this.locationString!!)
+        }
+        else {
+            data = service.getCurrentWeatherByLocation(location!!.latitude.toFloat(), location!!.longitude.toFloat())
+        }
         publishProgress(data)
         return null
     }
