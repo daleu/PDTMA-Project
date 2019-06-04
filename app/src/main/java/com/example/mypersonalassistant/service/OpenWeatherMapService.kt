@@ -46,6 +46,46 @@ class OpenWeatherMapService {
         val currentWeather = WeatherModel(name,temp,sunrise,sunset,humidity,windSpeed,weather,description, date)
 
         return currentWeather
+    }
+
+    fun getPredictionWeatherByCityName(city: String): ArrayList<WeatherModel>{
+
+        val client = OkHttpClient()
+        val request: Request = Request.Builder().url("http://api.openweathermap.org/data/2.5/forecast?q=$city&units=metric&APPID=$APPID").build()
+        var response: Response? = null
+
+        try {
+            response = client.newCall(request).execute()
+            //return response?.body().toString()
+        } catch (e: IOException){
+            e.printStackTrace()
+        }
+
+        val jsonData = response?.body()?.string()
+        val Jobject  = JSONObject(jsonData)
+
+        //parse Weather Data & create WeatherModel Object
+        var responseArray = ArrayList<WeatherModel>()
+        val name: String = Jobject.getJSONObject("city").getString("name")
+
+        val jarray:JSONArray = Jobject.getJSONArray("list")
+        for(i in 0 until jarray.length()){
+            var weahterObject = jarray.getJSONObject(i)
+
+            var weather: String = weahterObject.getJSONArray("weather").getJSONObject(0).getString("main")
+            var description: String = weahterObject.getJSONArray("weather").getJSONObject(0).getString("description")
+            var temp: Double = weahterObject.getJSONObject("main").getDouble("temp")
+            var windSpeed = weahterObject.getJSONObject("wind").getDouble("speed")
+            //var sunrise = weahterObject.getJSONObject("sys").getInt("sunrise")
+            //var sunset = weahterObject.getJSONObject("sys").getInt("sunset")
+            var humidity = weahterObject.getJSONObject("main").getInt("humidity")
+            var date = weahterObject.getInt("dt")
+
+            var currentWeather = WeatherModel(name,temp,0,0,humidity,windSpeed,weather,description,date)
+            responseArray.add(currentWeather)
+        }
+
+        return responseArray
 
     }
 

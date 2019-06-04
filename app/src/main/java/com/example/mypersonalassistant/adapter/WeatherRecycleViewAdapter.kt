@@ -19,7 +19,7 @@ import com.example.mypersonalassistant.model.WeatherModel
 import java.util.*
 import java.text.SimpleDateFormat
 
-class WeatherRecyclerViewAdapter(val list: ArrayList<WeatherModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class WeatherRecyclerViewAdapter(var list: ArrayList<WeatherModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

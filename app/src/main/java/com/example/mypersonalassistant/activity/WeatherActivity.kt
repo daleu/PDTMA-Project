@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -31,6 +32,7 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import com.google.android.gms.location.*
+import kotlin.collections.ArrayList
 
 
 @Suppress("DEPRECATED_IDENTITY_EQUALS")
@@ -137,9 +139,23 @@ class WeatherActivity : AppCompatActivity() {
             val inflater = this.layoutInflater
             val pref = getSharedPreferences("Cities",Context.MODE_PRIVATE)
             val prefs = pref.all
+            val values = ArrayList<String>()
+            values.add("Current Location")
             for (city in prefs) {
-                Log.i("CITY",city.value.toString())
+                values.add(city.value.toString())
             }
+            val array = values.toTypedArray()
+
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Select a city")
+                .setItems(array) { _, which ->
+                    val selected = values[which]
+                    val prefGen = getSharedPreferences("General", ContextWrapper.MODE_PRIVATE).edit()
+                    prefGen.putString("selectedLocation",selected).apply()
+                    changeLocation(selected)
+                }
+            val alert: AlertDialog = builder.create()
+            alert.show()
         }
 
         fabNewLocation!!.setOnClickListener {
@@ -157,22 +173,7 @@ class WeatherActivity : AppCompatActivity() {
                     pref.putString(newLocation.text.toString(),newLocation.text.toString()).apply()
                     val prefGen = getSharedPreferences("General", ContextWrapper.MODE_PRIVATE).edit()
                     prefGen.putString("selectedLocation",newLocation.text.toString()).apply()
-
-                    myCurrentWeatherTask = CurrentWeatherAsyncTask(
-                        cv,
-                        cardTitleViewWeather,
-                        cardImageViewTitleWeather,
-                        tempratureText,tempratureImage,
-                        humidityText,
-                        humidityImage,
-                        windText,
-                        windImage,
-                        currentWeatherMainImage,
-                        weatherConditionMain,
-                        weatherDate,
-                        null,
-                        newLocation.text.toString())
-                    myCurrentWeatherTask.execute()
+                    changeLocation(newLocation.text.toString())
                     dialog.cancel()
                 }
             val alert: AlertDialog = builder.create()
@@ -180,6 +181,50 @@ class WeatherActivity : AppCompatActivity() {
         }
 
         startLocationUpdates()
+    }
+
+    fun changeLocation(location: String){
+
+        if(location=="Current Location"){
+            myTask = WeatherAsyncTask(adapter, mLastLocation, null)
+            myTask.execute()
+
+            myCurrentWeatherTask = CurrentWeatherAsyncTask(
+                cv,
+                cardTitleViewWeather,
+                cardImageViewTitleWeather,
+                tempratureText,tempratureImage,
+                humidityText,
+                humidityImage,
+                windText,
+                windImage,
+                currentWeatherMainImage,
+                weatherConditionMain,
+                weatherDate,
+                mLastLocation,
+                null)
+            myCurrentWeatherTask.execute()
+        }
+        else{
+            myTask = WeatherAsyncTask(adapter, null, location)
+            myTask.execute()
+
+            myCurrentWeatherTask = CurrentWeatherAsyncTask(
+                cv,
+                cardTitleViewWeather,
+                cardImageViewTitleWeather,
+                tempratureText,tempratureImage,
+                humidityText,
+                humidityImage,
+                windText,
+                windImage,
+                currentWeatherMainImage,
+                weatherConditionMain,
+                weatherDate,
+                null,
+                location)
+            myCurrentWeatherTask.execute()
+        }
     }
 
     protected fun startLocationUpdates() {
@@ -227,7 +272,7 @@ class WeatherActivity : AppCompatActivity() {
         mLastLocation = location
         mLastLocationTime = Calendar.getInstance().time
 
-        myTask = WeatherAsyncTask(adapter, location)
+        myTask = WeatherAsyncTask(adapter, location, null)
         myTask.execute()
 
         myCurrentWeatherTask = CurrentWeatherAsyncTask(
@@ -269,3 +314,4 @@ class WeatherActivity : AppCompatActivity() {
     }
 
 }
+
