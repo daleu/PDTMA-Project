@@ -27,6 +27,7 @@ import java.util.*
 import android.widget.LinearLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import com.google.android.gms.location.*
@@ -133,7 +134,12 @@ class WeatherActivity : AppCompatActivity() {
         closeSubMenusFab()
 
         fabChangeLocation!!.setOnClickListener {
-
+            val inflater = this.layoutInflater
+            val pref = getSharedPreferences("Cities",Context.MODE_PRIVATE)
+            val prefs = pref.all
+            for (city in prefs) {
+                Log.i("CITY",city.value.toString())
+            }
         }
 
         fabNewLocation!!.setOnClickListener {
@@ -148,11 +154,9 @@ class WeatherActivity : AppCompatActivity() {
                 }
                 .setPositiveButton("Add") { dialog, id ->
                     val pref = getSharedPreferences("Cities",Context.MODE_PRIVATE).edit()
-                    pref.putString(newLocation.text.toString(),newLocation.text.toString())
+                    pref.putString(newLocation.text.toString(),newLocation.text.toString()).apply()
                     val prefGen = getSharedPreferences("General", ContextWrapper.MODE_PRIVATE).edit()
-                    prefGen.putString("selectedLocation",newLocation.text.toString())
-                    /*myTask = WeatherAsyncTask(adapter, null, newLocation.text.toString())
-                    myTask.execute()*/
+                    prefGen.putString("selectedLocation",newLocation.text.toString()).apply()
 
                     myCurrentWeatherTask = CurrentWeatherAsyncTask(
                         cv,
