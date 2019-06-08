@@ -24,4 +24,7 @@
     <string name="change_location">Change Location</string>
     <string name="add_location">Add Location</string>
     <string name="write_the_location_you_want_to_check">Write the location you want to check:</string>
+    <string name="to_o_list">To o List</string>
+    <string name="done">Done</string>
+    <string name="finish">Finish</string>
 </resources>
