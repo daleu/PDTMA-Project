@@ -19,7 +19,7 @@ class SpeechRrecognizerHelper(private var context: Context) {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun speechQuery(query: String){
         if(query==myLocation){
-            val pref = context.getSharedPreferences("Cities",Context.MODE_PRIVATE)
+            val pref = context.getSharedPreferences("General",Context.MODE_PRIVATE)
             val myLocation: String = pref.getString("currentLocality","Not Found")
             ttsHelper = TTSHelper(context,myLocation)
         }
