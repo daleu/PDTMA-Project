@@ -63,6 +63,22 @@ class ToDoListService(context: Context) {
     }
 
     @SuppressLint("Recycle")
+    fun getTop10ToDoList():ArrayList<ToDoModel>{
+        val toDoList = ArrayList<ToDoModel>()
+
+        val cursor: Cursor = database!!.query(MySQLHelper.TABLE_TO_DO,allColumns,MySQLHelper.COLUMN_DONE+"=0",null,null,null,MySQLHelper.COLUMN_ID,"10")
+
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast){
+            val todo:ToDoModel = cursorToToDo(cursor)
+            toDoList.add(todo)
+            cursor.moveToNext()
+        }
+        cursor.close()
+        return toDoList
+    }
+
+    @SuppressLint("Recycle")
     fun getAllDoneList():ArrayList<ToDoModel>{
         val toDoList = ArrayList<ToDoModel>()
 

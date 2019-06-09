@@ -7,19 +7,19 @@ class MainAdapterModel {
             field = value
         }
 
-    var weather: WeatherModel
+    var weather: WeatherModel?
         get() = field
         set(value) {
             field = value
         }
 
-    var toDo: Array<ToDoModel>
+    var toDo: ArrayList<ToDoModel>?
         get() = field
         set(value) {
             field = value
         }
 
-    constructor(type: Int, weather: WeatherModel, toDo: Array<ToDoModel>){
+    constructor(type: Int, weather: WeatherModel?, toDo: ArrayList<ToDoModel>?){
         this.type = type
         this.weather = weather
         this.toDo = toDo

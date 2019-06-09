@@ -31,6 +31,7 @@ import com.example.mypersonalassistant.adapter.MainRecyclerLastQueryViewAdapter
 import com.example.mypersonalassistant.service.OpenWeatherMapService
 import com.example.mypersonalassistant.adapter.MainRecyclerViewAdapter
 import com.example.mypersonalassistant.async.MainAsyncTask
+import com.example.mypersonalassistant.model.MainAdapterModel
 import com.example.mypersonalassistant.model.QueryModel
 import com.example.mypersonalassistant.model.WeatherModel
 import com.google.android.gms.location.*
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     //RECYCLE VIEW DETAIL
     private var recyclerView: RecyclerView? = null
-    var result: ArrayList<WeatherModel> = ArrayList<WeatherModel>()
+    var result: ArrayList<MainAdapterModel> = ArrayList<MainAdapterModel>()
     lateinit var adapter: MainRecyclerViewAdapter
     lateinit var layoutManagerLastQuery: LinearLayoutManager
 
@@ -224,7 +225,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mLastLocation = location
         mLastLocationTime = Calendar.getInstance().time
 
-        myTask = MainAsyncTask(adapter, layoutManager, location)
+        myTask = MainAsyncTask(adapter, layoutManager, location, this)
         myTask.execute()
     }
 

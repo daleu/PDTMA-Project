@@ -5,7 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.CardView
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,23 +19,25 @@ import com.example.mypersonalassistant.R
 import com.example.mypersonalassistant.activity.CalendarActivity
 import com.example.mypersonalassistant.activity.ToDoActivity
 import com.example.mypersonalassistant.activity.WeatherActivity
+import com.example.mypersonalassistant.model.MainAdapterModel
 import com.example.mypersonalassistant.model.WeatherModel
 import java.util.*
 
 
 
 
-class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>, val context:Context ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class MainRecyclerViewAdapter(val list: ArrayList<MainAdapterModel>, val context:Context ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val weather = list[position % list.size]
-
-        var day = false
-        val currentTime = System.currentTimeMillis()/1000
-        if(currentTime>weather.sunrise && currentTime<weather.sunset) day = true
 
         if(holder.itemViewType==0){
+            val weather = list[position % list.size].weather
+
+            var day = false
+            val currentTime = System.currentTimeMillis()/1000
+            if(currentTime> weather!!.sunrise && currentTime<weather.sunset) day = true
+
             var holderWeather: MainInfoViewWeatherHolder = holder as MainInfoViewWeatherHolder
 
             holderWeather.cardTitleViewWeather.text = weather.name
@@ -79,23 +84,35 @@ class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>, val context:Con
                 val intent = Intent(context, WeatherActivity::class.java)
                 context.startActivity(intent)
             }
+            Log.i("WEATHER",weather.description)
         }
         else if(holder.itemViewType==1) {
-            var holderCalendar: MainInfoViewCalendarHolder = holder as MainInfoViewCalendarHolder
-            holderCalendar.button.setOnClickListener {
-                val intent = Intent(context, CalendarActivity::class.java)
-                context.startActivity(intent)
-            }
-        }
-        else {
+
+            val toDo = list[position % list.size].toDo
+
             var toDoHolder: MainInfoViewToDoHolder = holder as MainInfoViewToDoHolder
             toDoHolder.button.setOnClickListener {
                 val intent = Intent(context, ToDoActivity::class.java)
                 context.startActivity(intent)
             }
 
-            //RECYCLE VIEW TO DO
+            var adapterToDo: MainRecycleViewToDoAdapter = MainRecycleViewToDoAdapter(toDo)
+            var layoutManagerToDo = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
+            toDoHolder.recyclerView?.layoutManager = layoutManagerToDo
+            toDoHolder.recyclerView?.itemAnimator = DefaultItemAnimator()
+            toDoHolder.recyclerView?.adapter = adapterToDo
+            adapterToDo.notifyDataSetChanged()
 
+            Log.i("WEATHER", toDo!!.size.toString())
+
+            //RECYCLE VIEW TO DO
+        }
+        else {
+            var holderCalendar: MainInfoViewCalendarHolder = holder as MainInfoViewCalendarHolder
+            holderCalendar.button.setOnClickListener {
+                val intent = Intent(context, CalendarActivity::class.java)
+                context.startActivity(intent)
+            }
         }
 
     }
@@ -111,12 +128,12 @@ class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>, val context:Con
             return MainInfoViewWeatherHolder(itemView)
         }
         else if(viewType==1){
-            val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.content_main_card_view_calendar,parent,false)
-            return MainInfoViewCalendarHolder(itemView)
-        }
-        else {
             val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.content_main_card_view_todo,parent,false)
             return MainInfoViewToDoHolder(itemView)
+        }
+        else {
+            val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.content_main_card_view_calendar,parent,false)
+            return MainInfoViewCalendarHolder(itemView)
         }
     }
 

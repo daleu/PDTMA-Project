@@ -1,27 +1,40 @@
 package com.example.mypersonalassistant.async
 
+import android.content.Context
 import android.location.Location
 import android.os.AsyncTask
 import android.support.v7.widget.LinearLayoutManager
 import com.example.mypersonalassistant.adapter.MainRecyclerViewAdapter
+import com.example.mypersonalassistant.database.ToDoListService
+import com.example.mypersonalassistant.model.MainAdapterModel
 import com.example.mypersonalassistant.model.WeatherModel
 import com.example.mypersonalassistant.service.OpenWeatherMapService
 
-class MainAsyncTask(adapter: MainRecyclerViewAdapter, layoutManager:LinearLayoutManager, location: Location) : AsyncTask<Void, WeatherModel, Void>(){
+class MainAsyncTask(adapter: MainRecyclerViewAdapter, layoutManager:LinearLayoutManager, location: Location, context: Context) : AsyncTask<Void, ArrayList<MainAdapterModel>, Void>(){
 
     private var adapter = adapter
     private var layoutManager = layoutManager
     private var location = location
+    private var toDoListService: ToDoListService = ToDoListService(context)
 
     override fun doInBackground(vararg params: Void?): Void? {
         val service = OpenWeatherMapService()
         val data: WeatherModel = service.getCurrentWeatherByLocation(location.latitude.toFloat(),location.longitude.toFloat())
-        publishProgress(data)
+        val dataWeather = MainAdapterModel(0,data, null)
+        val arrayList = ArrayList<MainAdapterModel>()
+        arrayList.add(dataWeather)
+        publishProgress(arrayList)
         return null
     }
 
-    override fun onProgressUpdate(vararg params: WeatherModel) {
-        adapter.list.add(params.get(0))
+    override fun onProgressUpdate(vararg params: ArrayList<MainAdapterModel>) {
+        adapter.list.add(params[0][0])
+        toDoListService.open()
+        var resultToDo = toDoListService.getAllToDoList()
+        toDoListService.close()
+        val dataToDo = MainAdapterModel(0,null, resultToDo)
+        adapter.list.add(dataToDo)
+        adapter.list.add(dataToDo)
         adapter.notifyDataSetChanged()
     }
 
