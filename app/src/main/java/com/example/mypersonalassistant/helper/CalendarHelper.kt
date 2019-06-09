@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
 import android.util.Log
+import com.example.mypersonalassistant.model.EventModel
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,8 +36,9 @@ class CalendarHelper(private var context: Context) {
     private val PROJECTION_END_INDEX: Int = 2
     private val PROJECTION_TITLE_INDEX: Int = 3
 
-    fun getTodayEvents(){
+    fun getTodayEvents():ArrayList<EventModel>{
 
+        var result = ArrayList<EventModel>()
         // Specify the date range you want to search for recurring
         // event instances
         var startCalendar = Calendar.getInstance()
@@ -50,7 +52,7 @@ class CalendarHelper(private var context: Context) {
         endCalendar.time = Date()
         endCalendar.add(Calendar.DATE,2)
         val endMillis: Long = Calendar.getInstance().run {
-            set(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DATE), 0, 0)
+            set(endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DATE), 0, 0)
             timeInMillis
         }
 
@@ -62,7 +64,7 @@ class CalendarHelper(private var context: Context) {
         val cur: Cursor = context.contentResolver.query(
             builder.build(),
             EVENT_PROJECTION,
-            null,null, null
+            null,null, CalendarContract.Instances.BEGIN
         )
 
         while (cur.moveToNext()) {
@@ -71,40 +73,97 @@ class CalendarHelper(private var context: Context) {
             val endVal: Long = cur.getLong(PROJECTION_END_INDEX)
             val title: String = cur.getString(PROJECTION_TITLE_INDEX)
 
-            try{
-                val calendar = Calendar.getInstance().apply {
-                    timeInMillis = beginVal
-                }
-                val formatter = SimpleDateFormat("MM/dd/yyyy")
-                Log.i("DEBUG", "Date: ${formatter.format(calendar.time)}")
-            } catch(erro:Exception){
-                Log.e("ERROR",erro.toString())
-            }
+            var event = EventModel(title,beginVal,endVal)
+            result.add(event)
         }
+
+        return result
     }
 
-    fun getTop100Events(){
-        // Run query
-        val uri: Uri = CalendarContract.Calendars.CONTENT_URI
-        val selection = "((${CalendarContract.Calendars.ACCOUNT_NAME} = ?))"
-        val selectionArgs: Array<String> = arrayOf("david.aleu.16@gmail.com")
-        var cur: Cursor? = null
-        try {
-            cur = context.contentResolver.query(uri, EVENT_PROJECTION, selection, selectionArgs, null)
+    fun getTop100Events():ArrayList<EventModel>{
+        var result = ArrayList<EventModel>()
+        // Specify the date range you want to search for recurring
+        // event instances
+        var startCalendar = Calendar.getInstance()
+        startCalendar.time = Date()
+        startCalendar.add(Calendar.DATE,1)
+        val startMillis: Long = Calendar.getInstance().run {
+            set(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DATE), 0, 0)
+            timeInMillis
         }
-        catch (error: Exception){
-            Log.e("WTF",error.toString())
+        var endCalendar = Calendar.getInstance()
+        endCalendar.time = Date()
+        endCalendar.add(Calendar.YEAR,1)
+        val endMillis: Long = Calendar.getInstance().run {
+            set(endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DATE), 0, 0)
+            timeInMillis
         }
 
-        while (cur!!.moveToNext()) {
+        // Construct the query with the desired date range.
+        val builder: Uri.Builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
+        ContentUris.appendId(builder, startMillis)
+        ContentUris.appendId(builder, endMillis)
+
+        val cur: Cursor = context.contentResolver.query(
+            builder.build(),
+            EVENT_PROJECTION,
+            null,null, CalendarContract.Instances.BEGIN
+        )
+
+        while (cur.moveToNext() && result.size < 100) {
             // Get the field values
-            /*val calID: Long = cur.getLong(PROJECTION_ID_INDEX)
-            val displayName: String = cur.getString(PROJECTION_DISPLAY_NAME_INDEX)
-            val accountName: String = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX)
-            val ownerName: String = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX)*/
+            val beginVal: Long = cur.getLong(PROJECTION_BEGIN_INDEX)
+            val endVal: Long = cur.getLong(PROJECTION_END_INDEX)
+            val title: String = cur.getString(PROJECTION_TITLE_INDEX)
 
-            //val cursor = context.contentResolver.query()
+            var event = EventModel(title,beginVal,endVal)
+            result.add(event)
         }
+
+        return result
+    }
+
+    fun getTop10Events():ArrayList<EventModel>{
+        var result = ArrayList<EventModel>()
+        // Specify the date range you want to search for recurring
+        // event instances
+        var startCalendar = Calendar.getInstance()
+        startCalendar.time = Date()
+        startCalendar.add(Calendar.DATE,1)
+        val startMillis: Long = Calendar.getInstance().run {
+            set(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DATE), 0, 0)
+            timeInMillis
+        }
+        var endCalendar = Calendar.getInstance()
+        endCalendar.time = Date()
+        endCalendar.add(Calendar.MONTH,1)
+        val endMillis: Long = Calendar.getInstance().run {
+            set(endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DATE), 0, 0)
+            timeInMillis
+        }
+
+        // Construct the query with the desired date range.
+        val builder: Uri.Builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
+        ContentUris.appendId(builder, startMillis)
+        ContentUris.appendId(builder, endMillis)
+
+        val cur: Cursor = context.contentResolver.query(
+            builder.build(),
+            EVENT_PROJECTION,
+            null,null, CalendarContract.Instances.BEGIN
+        )
+
+        while (cur.moveToNext() && result.size < 10) {
+            // Get the field values
+            val beginVal: Long = cur.getLong(PROJECTION_BEGIN_INDEX)
+            val endVal: Long = cur.getLong(PROJECTION_END_INDEX)
+            val title: String = cur.getString(PROJECTION_TITLE_INDEX)
+
+            var event = EventModel(title,beginVal,endVal)
+            result.add(event)
+        }
+
+        return result
     }
 
     fun addEvent(){

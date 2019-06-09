@@ -27,51 +27,6 @@ class MainRecyclerLastQueryViewAdapter(val list: ArrayList<QueryModel>) : Recycl
         holderLastQuery.lastQueryTitle.text = query.title
         holderLastQuery.lastQueryDescription.text = query.description
         holderLastQuery.lastQueryImageView.setImageResource(R.drawable.ic_clear_day)
-
-            /*holderWeather.cardTitleViewWeather.text = weather.name
-            if(day) holderWeather.cardImageViewTitleWeather.setImageResource(R.drawable.ic_day)
-            else holderWeather.cardImageViewTitleWeather.setImageResource(R.drawable.ic_night)
-
-            holderWeather.tempratureText.text = weather.temp.toString() + " ºC"
-            if(weather.temp>10) holderWeather.tempratureImage.setImageResource(R.drawable.ic_hot)
-            else holderWeather.tempratureImage.setImageResource(R.drawable.ic_cold)
-
-            holderWeather.humidityText.text = weather.humidity.toString()+" %"
-            holderWeather.humidityImage.setImageResource(R.drawable.ic_humidity)
-
-            holderWeather.windText.text = weather.windSpeed.toString() + " km/h"
-            holderWeather.windImage.setImageResource(R.drawable.ic_wind)
-
-            if(weather.weather=="Clear"){
-                if(day) holderWeather.currentWeatherMainImage.setImageResource(R.drawable.ic_clear_day)
-                else holderWeather.currentWeatherMainImage.setImageResource(R.drawable.ic_clear_day)
-            }
-            else if(weather.weather=="Clouds"){
-                if(weather.description=="few clouds") {
-                    if(day) holderWeather.currentWeatherMainImage.setImageResource(R.drawable.ic_cloudy_half_day)
-                    else holderWeather.currentWeatherMainImage.setImageResource(R.drawable.ic_cloudy_half_night)
-                }
-                else holderWeather.currentWeatherMainImage.setImageResource(R.drawable.ic_cloudy)
-            }
-            else if(weather.weather=="Rain" || weather.weather=="Drizzle"){
-                holderWeather.currentWeatherMainImage.setImageResource(R.drawable.ic_rain)
-            }
-            else if(weather.weather=="Thunderstorm"){
-                holderWeather.currentWeatherMainImage.setImageResource(R.drawable.ic_storm)
-            }
-            else if(weather.weather=="Snow"){
-                holderWeather.currentWeatherMainImage.setImageResource(R.drawable.ic_snowy)
-            }
-            else{
-                holderWeather.currentWeatherMainImage.setImageResource(R.drawable.ic_fog)
-            }
-
-            holderWeather.weatherConditionMain.text = "("+weather.description+")"
-        }
-        else {
-            var holderCalendar: MainInfoViewCalendarHolder = holder as MainInfoViewCalendarHolder
-        }*/
-
     }
 
     override fun getItemCount(): Int {

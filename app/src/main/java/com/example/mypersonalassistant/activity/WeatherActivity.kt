@@ -192,47 +192,8 @@ class WeatherActivity : AppCompatActivity() {
     }
 
     fun changeLocation(location: String){
-
-        if(location=="Current Location"){
-            myTask = WeatherAsyncTask(adapter, mLastLocation, null)
-            myTask.execute()
-
-            myCurrentWeatherTask = CurrentWeatherAsyncTask(
-                cv,
-                cardTitleViewWeather,
-                cardImageViewTitleWeather,
-                tempratureText,tempratureImage,
-                humidityText,
-                humidityImage,
-                windText,
-                windImage,
-                currentWeatherMainImage,
-                weatherConditionMain,
-                weatherDate,
-                mLastLocation,
-                null)
-            myCurrentWeatherTask.execute()
-        }
-        else{
-            myTask = WeatherAsyncTask(adapter, null, location)
-            myTask.execute()
-
-            myCurrentWeatherTask = CurrentWeatherAsyncTask(
-                cv,
-                cardTitleViewWeather,
-                cardImageViewTitleWeather,
-                tempratureText,tempratureImage,
-                humidityText,
-                humidityImage,
-                windText,
-                windImage,
-                currentWeatherMainImage,
-                weatherConditionMain,
-                weatherDate,
-                null,
-                location)
-            myCurrentWeatherTask.execute()
-        }
+        if(location=="Current Location") executeAsyncTask(mLastLocation,null)
+        else executeAsyncTask(null,location)
     }
 
     protected fun startLocationUpdates() {
@@ -280,24 +241,11 @@ class WeatherActivity : AppCompatActivity() {
         mLastLocation = location
         mLastLocationTime = Calendar.getInstance().time
 
-        myTask = WeatherAsyncTask(adapter, location, null)
-        myTask.execute()
+        val prefGen = getSharedPreferences("General", ContextWrapper.MODE_PRIVATE)
+        val selectedLocation = prefGen.getString("selectedLocation","Madrid")
 
-        myCurrentWeatherTask = CurrentWeatherAsyncTask(
-                cv,
-                cardTitleViewWeather,
-                cardImageViewTitleWeather,
-                tempratureText,tempratureImage,
-                humidityText,
-                humidityImage,
-                windText,
-                windImage,
-                currentWeatherMainImage,
-                weatherConditionMain,
-                weatherDate,
-                location,
-            null)
-        myCurrentWeatherTask.execute()
+        if(selectedLocation=="Current Location")executeAsyncTask(location,null)
+        else executeAsyncTask(null,selectedLocation)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -319,6 +267,49 @@ class WeatherActivity : AppCompatActivity() {
         //Change settings icon to 'X' icon
         fabSettings?.setImageResource(R.drawable.ic_cancel_music)
         fabExpanded = true
+    }
+
+    private fun executeAsyncTask(location: Location?, locationString: String?){
+        if(location!=null){
+            myTask = WeatherAsyncTask(adapter, location, null)
+            myTask.execute()
+
+            myCurrentWeatherTask = CurrentWeatherAsyncTask(
+                cv,
+                cardTitleViewWeather,
+                cardImageViewTitleWeather,
+                tempratureText,tempratureImage,
+                humidityText,
+                humidityImage,
+                windText,
+                windImage,
+                currentWeatherMainImage,
+                weatherConditionMain,
+                weatherDate,
+                location,
+                null)
+            myCurrentWeatherTask.execute()
+        }
+        else {
+            myTask = WeatherAsyncTask(adapter, null, locationString)
+            myTask.execute()
+
+            myCurrentWeatherTask = CurrentWeatherAsyncTask(
+                cv,
+                cardTitleViewWeather,
+                cardImageViewTitleWeather,
+                tempratureText,tempratureImage,
+                humidityText,
+                humidityImage,
+                windText,
+                windImage,
+                currentWeatherMainImage,
+                weatherConditionMain,
+                weatherDate,
+                null,
+                locationString)
+            myCurrentWeatherTask.execute()
+        }
     }
 
     private fun displaySpeechRecognizer(){

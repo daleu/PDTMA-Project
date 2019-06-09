@@ -42,12 +42,13 @@
 
         </LinearLayout>
 
-        <CalendarView
-                android:layout_below="@+id/headerLayout"
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/calendar_recycleview"
                 android:layout_width="300dp"
                 android:layout_marginLeft="25dp"
-                android:layout_height="300dp" android:id="@+id/calendarView"/>
-
+                android:layout_below="@+id/headerLayout"
+                android:layout_marginTop="10dp"
+                android:layout_height="300dp" android:layout_marginStart="25dp"/>
         <Button
                 android:layout_width="100dp"
                 android:layout_height="50dp"
@@ -56,7 +57,7 @@
                 android:background="@color/holo_blue_dark"
                 android:textColor="@color/white"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:layout_below="@+id/calendarView" android:layout_marginTop="10dp"
+                android:layout_below="@+id/calendar_recycleview" android:layout_marginTop="10dp"
                 android:layout_alignParentStart="true" android:layout_marginLeft="125dp"
                 android:layout_marginStart="125dp"
                 android:layout_alignParentLeft="true"/>

@@ -9,14 +9,17 @@ import android.support.annotation.RequiresApi
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.CalendarView
 import com.example.mypersonalassistant.R
+import com.example.mypersonalassistant.adapter.CalendarRecycleViewAdapter
 import com.example.mypersonalassistant.adapter.ToDoListRecycleViewAdapter
 import com.example.mypersonalassistant.helper.CalendarHelper
 import com.example.mypersonalassistant.helper.SpeechRecognizerHelper
+import com.example.mypersonalassistant.model.EventModel
 import com.example.mypersonalassistant.model.ToDoModel
 
 import kotlinx.android.synthetic.main.activity_calendar.*
@@ -25,10 +28,10 @@ import java.util.*
 class CalendarActivity : AppCompatActivity() {
 
     //CALENDAR ADAPTER
-    private var recyclerViewToDo: RecyclerView? = null
-    //var resultToDo: ArrayList<EventModel> = ArrayList<EventModel>()
-    lateinit var adapterToDo: ToDoListRecycleViewAdapter
-    lateinit var layoutManagerToDo: LinearLayoutManager
+    private var recyclerViewCalendar: RecyclerView? = null
+    var resultCalendar: ArrayList<EventModel> = ArrayList<EventModel>()
+    lateinit var adapterCalendar: CalendarRecycleViewAdapter
+    lateinit var layoutManagerCalendar: LinearLayoutManager
 
     //CALENDAR HELPER
     private var calendarHelper = CalendarHelper(this)
@@ -43,6 +46,17 @@ class CalendarActivity : AppCompatActivity() {
 
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
+
+        resultCalendar = calendarHelper.getTop100Events()
+
+        //RECYCLE VIEW TO DO
+        recyclerViewCalendar = findViewById(R.id.events_recycleview)
+        adapterCalendar = CalendarRecycleViewAdapter(resultCalendar)
+        layoutManagerCalendar = LinearLayoutManager(applicationContext,LinearLayoutManager.VERTICAL,false)
+        recyclerViewCalendar?.layoutManager = layoutManagerCalendar
+        recyclerViewCalendar?.itemAnimator = DefaultItemAnimator()
+        recyclerViewCalendar?.adapter = adapterCalendar
+        adapterCalendar.notifyDataSetChanged()
 
         fabAdd!!.setOnClickListener {view ->
             calendarHelper.addEvent()

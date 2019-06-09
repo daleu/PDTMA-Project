@@ -26,7 +26,7 @@ import java.util.*
 
 
 
-class MainRecyclerViewAdapter(val list: ArrayList<MainAdapterModel>, val context:Context ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class MainRecyclerViewAdapter(var list: ArrayList<MainAdapterModel>, val context:Context ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -84,7 +84,6 @@ class MainRecyclerViewAdapter(val list: ArrayList<MainAdapterModel>, val context
                 val intent = Intent(context, WeatherActivity::class.java)
                 context.startActivity(intent)
             }
-            Log.i("WEATHER",weather.description)
         }
         else if(holder.itemViewType==1) {
 
@@ -96,23 +95,29 @@ class MainRecyclerViewAdapter(val list: ArrayList<MainAdapterModel>, val context
                 context.startActivity(intent)
             }
 
-            var adapterToDo: MainRecycleViewToDoAdapter = MainRecycleViewToDoAdapter(toDo)
+            var adapterToDo = MainRecycleViewToDoAdapter(toDo)
             var layoutManagerToDo = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
             toDoHolder.recyclerView?.layoutManager = layoutManagerToDo
             toDoHolder.recyclerView?.itemAnimator = DefaultItemAnimator()
             toDoHolder.recyclerView?.adapter = adapterToDo
             adapterToDo.notifyDataSetChanged()
-
-            Log.i("WEATHER", toDo!!.size.toString())
-
-            //RECYCLE VIEW TO DO
         }
         else {
+
+            val events = list[position % list.size].events
+
             var holderCalendar: MainInfoViewCalendarHolder = holder as MainInfoViewCalendarHolder
             holderCalendar.button.setOnClickListener {
                 val intent = Intent(context, CalendarActivity::class.java)
                 context.startActivity(intent)
             }
+
+            var adapterEvents = MainRecycleViewEventAdaper(events)
+            var layoutManagerToDo = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
+            holderCalendar.recyclerView?.layoutManager = layoutManagerToDo
+            holderCalendar.recyclerView?.itemAnimator = DefaultItemAnimator()
+            holderCalendar.recyclerView?.adapter = adapterEvents
+            adapterEvents.notifyDataSetChanged()
         }
 
     }
@@ -146,9 +151,11 @@ class MainRecyclerViewAdapter(val list: ArrayList<MainAdapterModel>, val context
     class MainInfoViewCalendarHolder(view: View) : RecyclerView.ViewHolder(view) {
         var cv: CardView
         var button: Button
+        var recyclerView: RecyclerView
 
         init {
             cv = view.findViewById(R.id.calendar_card_view)
+            recyclerView = view.findViewById(R.id.calendar_recycleview)
             button = itemView.findViewById(R.id.explore)
         }
     }
@@ -159,7 +166,7 @@ class MainRecyclerViewAdapter(val list: ArrayList<MainAdapterModel>, val context
         var recyclerView: RecyclerView
 
         init {
-            cv = view.findViewById(R.id.calendar_card_view)
+            cv = view.findViewById(R.id.todo_card_view)
             recyclerView = view.findViewById(R.id.todo_recycleview)
             button = itemView.findViewById(R.id.explore)
         }

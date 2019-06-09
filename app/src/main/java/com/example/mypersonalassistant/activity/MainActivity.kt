@@ -291,4 +291,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+
+    override fun onResume() {
+        super.onResume()
+        if(::mLastLocation.isInitialized){
+            myTask = MainAsyncTask(adapter, layoutManager, mLastLocation, this)
+            myTask.execute()
+        }
+    }
 }
