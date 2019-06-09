@@ -1,8 +1,11 @@
 package com.example.mypersonalassistant.activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
@@ -39,6 +42,9 @@ class ToDoActivity : AppCompatActivity() {
     var resultDone: ArrayList<ToDoModel> = ArrayList<ToDoModel>()
     lateinit var adapterDone: ToDoListRecycleViewAdapter
     lateinit var layoutManagerDone: LinearLayoutManager
+
+    //SPEECH CODE
+    private var SPEECH_REQUEST_CODE: Int = 10
 
     var fabAdd: FloatingActionButton? = null
 
@@ -120,14 +126,30 @@ class ToDoActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            displaySpeechRecognizer()
+            //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+             //   .setAction("Action", null).show()
         }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    private fun displaySpeechRecognizer(){
+        var intent: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        startActivityForResult(intent, SPEECH_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == SPEECH_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            var results: List<String> = data!!.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            var spokenText = results.get(0)
+            Log.i("SPEECH", spokenText)
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }
