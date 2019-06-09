@@ -1,4 +1,4 @@
-package com.example.mypersonalassistant.database
+package com.example.mypersonalassistant.helper
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

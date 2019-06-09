@@ -5,7 +5,7 @@ import android.location.Location
 import android.os.AsyncTask
 import android.support.v7.widget.LinearLayoutManager
 import com.example.mypersonalassistant.adapter.MainRecyclerViewAdapter
-import com.example.mypersonalassistant.database.ToDoListService
+import com.example.mypersonalassistant.service.ToDoListService
 import com.example.mypersonalassistant.model.MainAdapterModel
 import com.example.mypersonalassistant.model.WeatherModel
 import com.example.mypersonalassistant.service.OpenWeatherMapService
@@ -15,7 +15,8 @@ class MainAsyncTask(adapter: MainRecyclerViewAdapter, layoutManager:LinearLayout
     private var adapter = adapter
     private var layoutManager = layoutManager
     private var location = location
-    private var toDoListService: ToDoListService = ToDoListService(context)
+    private var toDoListService: ToDoListService =
+        ToDoListService(context)
 
     override fun doInBackground(vararg params: Void?): Void? {
         val service = OpenWeatherMapService()

@@ -1,4 +1,4 @@
-package com.example.mypersonalassistant.database
+package com.example.mypersonalassistant.service
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -6,19 +6,22 @@ import android.content.Context
 import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
+import com.example.mypersonalassistant.helper.MySQLHelper
 import com.example.mypersonalassistant.model.ToDoModel
 
 class ToDoListService(context: Context) {
 
     // Database fields
     private var database: SQLiteDatabase? = null
-    private var dbHelper: MySQLHelper = MySQLHelper(context)
+    private var dbHelper: MySQLHelper =
+        MySQLHelper(context)
 
     private var allColumns = arrayOf(
         MySQLHelper.COLUMN_ID,
         MySQLHelper.COLUMN_TITLE,
         MySQLHelper.COLUMN_DESCRIPTION,
-        MySQLHelper.COLUMN_DONE)
+        MySQLHelper.COLUMN_DONE
+    )
 
     @Throws(SQLException::class)
     fun open() {
@@ -50,7 +53,11 @@ class ToDoListService(context: Context) {
     fun getAllToDoList():ArrayList<ToDoModel>{
         val toDoList = ArrayList<ToDoModel>()
 
-        val cursor: Cursor = database!!.query(MySQLHelper.TABLE_TO_DO,allColumns,MySQLHelper.COLUMN_DONE+"=0",null,null,null,MySQLHelper.COLUMN_ID)
+        val cursor: Cursor = database!!.query(
+            MySQLHelper.TABLE_TO_DO,allColumns,
+            MySQLHelper.COLUMN_DONE +"=0",null,null,null,
+            MySQLHelper.COLUMN_ID
+        )
 
         cursor.moveToFirst()
         while (!cursor.isAfterLast){
@@ -66,7 +73,10 @@ class ToDoListService(context: Context) {
     fun getTop10ToDoList():ArrayList<ToDoModel>{
         val toDoList = ArrayList<ToDoModel>()
 
-        val cursor: Cursor = database!!.query(MySQLHelper.TABLE_TO_DO,allColumns,MySQLHelper.COLUMN_DONE+"=0",null,null,null,MySQLHelper.COLUMN_ID,"10")
+        val cursor: Cursor = database!!.query(
+            MySQLHelper.TABLE_TO_DO,allColumns,
+            MySQLHelper.COLUMN_DONE +"=0",null,null,null,
+            MySQLHelper.COLUMN_ID,"10")
 
         cursor.moveToFirst()
         while (!cursor.isAfterLast){
@@ -82,7 +92,11 @@ class ToDoListService(context: Context) {
     fun getAllDoneList():ArrayList<ToDoModel>{
         val toDoList = ArrayList<ToDoModel>()
 
-        val cursor: Cursor = database!!.query(MySQLHelper.TABLE_TO_DO,allColumns,MySQLHelper.COLUMN_DONE+"=1",null,null,null,MySQLHelper.COLUMN_ID)
+        val cursor: Cursor = database!!.query(
+            MySQLHelper.TABLE_TO_DO,allColumns,
+            MySQLHelper.COLUMN_DONE +"=1",null,null,null,
+            MySQLHelper.COLUMN_ID
+        )
 
         cursor.moveToFirst()
         while (!cursor.isAfterLast){

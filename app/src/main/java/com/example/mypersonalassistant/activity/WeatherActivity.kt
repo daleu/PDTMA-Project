@@ -2,13 +2,18 @@ package com.example.mypersonalassistant.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.speech.RecognizerIntent
+import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +36,7 @@ import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import com.example.mypersonalassistant.helper.SpeechRrecognizerHelper
 import com.google.android.gms.location.*
 import kotlin.collections.ArrayList
 
@@ -76,6 +82,9 @@ class WeatherActivity : AppCompatActivity() {
     private val INTERVAL: Long = 2000
     private val FASTEST_INTERVAL: Long = 1000
 
+    //SPEECH CODE
+    private var SPEECH_REQUEST_CODE: Int = 10
+
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,8 +125,7 @@ class WeatherActivity : AppCompatActivity() {
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            displaySpeechRecognizer()
         }
 
         fabSettings = this.findViewById(R.id.fabSettings) as FloatingActionButton
@@ -311,6 +319,23 @@ class WeatherActivity : AppCompatActivity() {
         //Change settings icon to 'X' icon
         fabSettings?.setImageResource(R.drawable.ic_cancel_music)
         fabExpanded = true
+    }
+
+    private fun displaySpeechRecognizer(){
+        var intent: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        startActivityForResult(intent, SPEECH_REQUEST_CODE)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == SPEECH_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            var results: List<String> = data!!.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            var spokenText = results.get(0)
+            val speechRrecognizerHelper = SpeechRrecognizerHelper(this)
+            speechRrecognizerHelper.speechQuery(spokenText)
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

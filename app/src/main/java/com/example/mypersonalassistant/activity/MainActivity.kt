@@ -2,9 +2,13 @@ package com.example.mypersonalassistant.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.AsyncTask
@@ -12,6 +16,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.speech.RecognizerIntent
+import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
@@ -31,12 +37,15 @@ import com.example.mypersonalassistant.adapter.MainRecyclerLastQueryViewAdapter
 import com.example.mypersonalassistant.service.OpenWeatherMapService
 import com.example.mypersonalassistant.adapter.MainRecyclerViewAdapter
 import com.example.mypersonalassistant.async.MainAsyncTask
+import com.example.mypersonalassistant.helper.SpeechRrecognizerHelper
 import com.example.mypersonalassistant.model.MainAdapterModel
 import com.example.mypersonalassistant.model.QueryModel
 import com.example.mypersonalassistant.model.WeatherModel
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import java.io.IOException
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -64,6 +73,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val INTERVAL: Long = 2000
     private val FASTEST_INTERVAL: Long = 1000
 
+    //SPEECH CODE
+    private var SPEECH_REQUEST_CODE: Int = 10
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,8 +104,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         //FLOATING BUTTON
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            displaySpeechRecognizer()
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -225,6 +235,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mLastLocation = location
         mLastLocationTime = Calendar.getInstance().time
 
+        val geocoder: Geocoder = Geocoder(this, Locale.ENGLISH)
+        val prefGen = getSharedPreferences("General", ContextWrapper.MODE_PRIVATE).edit()
+        try {
+            var address = geocoder.getFromLocation(location.latitude,location.longitude,1)
+            if(address!=null){
+                var locality = address.get(0).locality
+                prefGen.putString("currentLocality",locality).apply()
+            }
+            else {
+                prefGen.putString("currentLocality","Not Found").apply()
+            }
+        } catch(error: IOException){
+            prefGen.putString("currentLocality","Not Found").apply()
+        }
+
         myTask = MainAsyncTask(adapter, layoutManager, location, this)
         myTask.execute()
     }
@@ -278,5 +303,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun displaySpeechRecognizer(){
+        var intent: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        startActivityForResult(intent, SPEECH_REQUEST_CODE)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == SPEECH_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            var results: List<String> = data!!.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            var spokenText = results.get(0)
+            val speechRrecognizerHelper = SpeechRrecognizerHelper(this)
+            speechRrecognizerHelper.speechQuery(spokenText)
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }
