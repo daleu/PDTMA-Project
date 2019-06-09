@@ -22,7 +22,7 @@ class MySQLHelper(context: Context) : SQLiteOpenHelper(context, "myassistant.db"
             + COLUMN_ID + " integer primary key autoincrement, "
             + COLUMN_TITLE + " text not null, "
             + COLUMN_DESCRIPTION + " text not null, "
-            + COLUMN_DONE + " integer not null, "
+            + COLUMN_DONE + " integer not null"
             + ");")
 
     override fun onCreate(db: SQLiteDatabase?) {

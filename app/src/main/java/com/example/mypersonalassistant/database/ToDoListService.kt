@@ -33,13 +33,14 @@ class ToDoListService(context: Context) {
         val values = ContentValues()
         values.put(MySQLHelper.COLUMN_TITLE,title)
         values.put(MySQLHelper.COLUMN_DESCRIPTION,description)
+        values.put(MySQLHelper.COLUMN_DONE,0)
 
         val insertId:Long = this.database!!.insert(MySQLHelper.TABLE_TO_DO,null,values)
         return insertId
     }
 
     @SuppressLint("Recycle")
-    fun getAllToDoList():List<ToDoModel>{
+    fun getAllToDoList():ArrayList<ToDoModel>{
         val toDoList = ArrayList<ToDoModel>()
 
         val cursor: Cursor = database!!.query(MySQLHelper.TABLE_TO_DO,allColumns,null,null,null,null,MySQLHelper.COLUMN_ID)
