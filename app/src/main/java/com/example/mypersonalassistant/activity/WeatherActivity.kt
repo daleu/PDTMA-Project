@@ -36,7 +36,7 @@ import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
 import android.widget.EditText
-import com.example.mypersonalassistant.helper.SpeechRrecognizerHelper
+import com.example.mypersonalassistant.helper.SpeechRecognizerHelper
 import com.google.android.gms.location.*
 import kotlin.collections.ArrayList
 
@@ -332,7 +332,7 @@ class WeatherActivity : AppCompatActivity() {
         if(requestCode == SPEECH_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             var results: List<String> = data!!.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
             var spokenText = results.get(0)
-            val speechRrecognizerHelper = SpeechRrecognizerHelper(this)
+            val speechRrecognizerHelper = SpeechRecognizerHelper(this)
             speechRrecognizerHelper.speechQuery(spokenText)
         }
         super.onActivityResult(requestCode, resultCode, data)

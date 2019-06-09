@@ -18,7 +18,7 @@ import android.widget.EditText
 import com.example.mypersonalassistant.R
 import com.example.mypersonalassistant.`interface`.OnItemClickListener
 import com.example.mypersonalassistant.adapter.ToDoListRecycleViewAdapter
-import com.example.mypersonalassistant.helper.SpeechRrecognizerHelper
+import com.example.mypersonalassistant.helper.SpeechRecognizerHelper
 import com.example.mypersonalassistant.service.ToDoListService
 import com.example.mypersonalassistant.model.ToDoModel
 
@@ -143,7 +143,7 @@ class ToDoActivity : AppCompatActivity() {
         if(requestCode == SPEECH_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             var results: List<String> = data!!.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
             var spokenText = results.get(0)
-            val speechRrecognizerHelper = SpeechRrecognizerHelper(this)
+            val speechRrecognizerHelper = SpeechRecognizerHelper(this)
             speechRrecognizerHelper.speechQuery(spokenText)
         }
         super.onActivityResult(requestCode, resultCode, data)

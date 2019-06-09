@@ -37,7 +37,7 @@ import com.example.mypersonalassistant.adapter.MainRecyclerLastQueryViewAdapter
 import com.example.mypersonalassistant.service.OpenWeatherMapService
 import com.example.mypersonalassistant.adapter.MainRecyclerViewAdapter
 import com.example.mypersonalassistant.async.MainAsyncTask
-import com.example.mypersonalassistant.helper.SpeechRrecognizerHelper
+import com.example.mypersonalassistant.helper.SpeechRecognizerHelper
 import com.example.mypersonalassistant.model.MainAdapterModel
 import com.example.mypersonalassistant.model.QueryModel
 import com.example.mypersonalassistant.model.WeatherModel
@@ -125,9 +125,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             buildAlertMessageNoGps()
         }
 
-        if(checkPermissionForLocation(this)){
-            startLocationUpdates()
-        }
+        startLocationUpdates()
+
     }
 
     fun generateDataLastQuery(): ArrayList<QueryModel> {
@@ -142,50 +141,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return queries
     }
 
-    fun checkPermissionForLocation(context: Context): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                true
-            } else {
-                // Show the permission request
-                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                        REQUEST_PERMISSION_LOCATION)
-                false
-            }
-        } else {
-            true
-        }
-    }
-
     private fun buildAlertMessageNoGps() {
 
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
-                .setCancelable(false)
-                .setPositiveButton("Yes") { dialog, id ->
-                    startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                            , 11)
-                }
-                .setNegativeButton("No") { dialog, id ->
-                    dialog.cancel()
-                    finish()
-                }
+            .setCancelable(false)
+            .setPositiveButton("Yes") { dialog, id ->
+                startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    , 11)
+            }
+            .setNegativeButton("No") { dialog, id ->
+                dialog.cancel()
+                finish()
+            }
         val alert: AlertDialog = builder.create()
         alert.show()
-
-
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == REQUEST_PERMISSION_LOCATION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startLocationUpdates()
-            } else {
-                Toast.makeText(this@MainActivity, "Permission Denied", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     protected fun startLocationUpdates() {
@@ -212,7 +182,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             return
         }
         mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback,
-                Looper.myLooper())
+            Looper.myLooper())
     }
 
     private val mLocationCallback = object : LocationCallback() {
@@ -316,7 +286,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if(requestCode == SPEECH_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             var results: List<String> = data!!.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
             var spokenText = results.get(0)
-            val speechRrecognizerHelper = SpeechRrecognizerHelper(this)
+            val speechRrecognizerHelper = SpeechRecognizerHelper(this)
             speechRrecognizerHelper.speechQuery(spokenText)
         }
         super.onActivityResult(requestCode, resultCode, data)

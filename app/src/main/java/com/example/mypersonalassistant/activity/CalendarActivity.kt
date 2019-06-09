@@ -6,16 +6,32 @@ import android.os.Build
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.support.annotation.RequiresApi
+import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.widget.CalendarView
 import com.example.mypersonalassistant.R
-import com.example.mypersonalassistant.helper.SpeechRrecognizerHelper
+import com.example.mypersonalassistant.adapter.ToDoListRecycleViewAdapter
+import com.example.mypersonalassistant.helper.CalendarHelper
+import com.example.mypersonalassistant.helper.SpeechRecognizerHelper
+import com.example.mypersonalassistant.model.ToDoModel
 
 import kotlinx.android.synthetic.main.activity_calendar.*
 import java.util.*
 
 class CalendarActivity : AppCompatActivity() {
+
+    //CALENDAR ADAPTER
+    private var recyclerViewToDo: RecyclerView? = null
+    //var resultToDo: ArrayList<EventModel> = ArrayList<EventModel>()
+    lateinit var adapterToDo: ToDoListRecycleViewAdapter
+    lateinit var layoutManagerToDo: LinearLayoutManager
+
+    //CALENDAR HELPER
+    private var calendarHelper = CalendarHelper(this)
 
     //SPEECH CODE
     private var SPEECH_REQUEST_CODE: Int = 10
@@ -28,12 +44,13 @@ class CalendarActivity : AppCompatActivity() {
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
 
+        fabAdd!!.setOnClickListener {view ->
+            calendarHelper.addEvent()
+        }
+
         fab.setOnClickListener { view ->
             displaySpeechRecognizer()
         }
-
-        var calId = 1
-        var cal: Calendar = Calendar.getInstance()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -52,7 +69,7 @@ class CalendarActivity : AppCompatActivity() {
         if(requestCode == SPEECH_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             var results: List<String> = data!!.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
             var spokenText = results.get(0)
-            val speechRrecognizerHelper = SpeechRrecognizerHelper(this)
+            val speechRrecognizerHelper = SpeechRecognizerHelper(this)
             speechRrecognizerHelper.speechQuery(spokenText)
         }
         super.onActivityResult(requestCode, resultCode, data)

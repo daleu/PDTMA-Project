@@ -9,9 +9,22 @@
         tools:showIn="@layout/activity_calendar"
         tools:context=".activity.CalendarActivity">
 
-    <CalendarView
-            android:id="@+id/CalendarView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="@string/next_events"
+            android:id="@+id/nextTitle"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            app:fontFamily="sans-serif" android:layout_marginStart="10dp"/>
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/events_recycleview"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/nextTitle"
+            android:layout_marginTop="10dp"
+            android:layout_height="600dp"/>
 
 </RelativeLayout>

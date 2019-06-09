@@ -30,6 +30,14 @@ class SplashActivity : AppCompatActivity() {
     private val INTERVAL: Long = 2000
     private val FASTEST_INTERVAL: Long = 1000
 
+    //PERMISIONS
+    private var permissions = arrayOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.READ_CALENDAR,
+        Manifest.permission.WRITE_CALENDAR,
+        Manifest.permission.RECORD_AUDIO)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -40,26 +48,30 @@ class SplashActivity : AppCompatActivity() {
             buildAlertMessageNoGps()
         }
 
-        if(checkPermissionForLocation(this)){
+        if(checkPermission(this)){
             startLocationUpdates()
+        }
+        else {
+            ActivityCompat.requestPermissions(this, permissions, 1)
         }
     }
 
-    fun checkPermissionForLocation(context: Context): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                true
-            } else {
-                // Show the permission request
-                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                        REQUEST_PERMISSION_LOCATION)
-                false
-            }
-        } else {
-            true
+    fun checkPermission(context: Context): Boolean {
+        for(permission in permissions){
+            if(ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED) return false
         }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startLocationUpdates()
+                val intent = Intent(this, MainActivity::class.java)
+                this.startActivity(intent)
+                this.finish()
+            } else {
+                Toast.makeText(this@SplashActivity, "Permission Denied", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun buildAlertMessageNoGps() {
@@ -79,16 +91,6 @@ class SplashActivity : AppCompatActivity() {
         alert.show()
 
 
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == REQUEST_PERMISSION_LOCATION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startLocationUpdates()
-            } else {
-                Toast.makeText(this@SplashActivity, "Permission Denied", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     protected fun startLocationUpdates() {
