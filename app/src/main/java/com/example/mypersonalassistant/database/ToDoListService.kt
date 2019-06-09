@@ -39,11 +39,34 @@ class ToDoListService(context: Context) {
         return insertId
     }
 
+    fun changeItemsStatus(done: Int, id:Int){
+        val values = ContentValues()
+        values.put(MySQLHelper.COLUMN_DONE,done)
+
+        database!!.update(MySQLHelper.TABLE_TO_DO, values, MySQLHelper.COLUMN_ID + "=" + id, null)
+    }
+
     @SuppressLint("Recycle")
     fun getAllToDoList():ArrayList<ToDoModel>{
         val toDoList = ArrayList<ToDoModel>()
 
-        val cursor: Cursor = database!!.query(MySQLHelper.TABLE_TO_DO,allColumns,null,null,null,null,MySQLHelper.COLUMN_ID)
+        val cursor: Cursor = database!!.query(MySQLHelper.TABLE_TO_DO,allColumns,MySQLHelper.COLUMN_DONE+"=0",null,null,null,MySQLHelper.COLUMN_ID)
+
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast){
+            val todo:ToDoModel = cursorToToDo(cursor)
+            toDoList.add(todo)
+            cursor.moveToNext()
+        }
+        cursor.close()
+        return toDoList
+    }
+
+    @SuppressLint("Recycle")
+    fun getAllDoneList():ArrayList<ToDoModel>{
+        val toDoList = ArrayList<ToDoModel>()
+
+        val cursor: Cursor = database!!.query(MySQLHelper.TABLE_TO_DO,allColumns,MySQLHelper.COLUMN_DONE+"=1",null,null,null,MySQLHelper.COLUMN_ID)
 
         cursor.moveToFirst()
         while (!cursor.isAfterLast){

@@ -10,23 +10,35 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import com.example.mypersonalassistant.R
+import com.example.mypersonalassistant.`interface`.OnItemClickListener
 import com.example.mypersonalassistant.adapter.ToDoListRecycleViewAdapter
 import com.example.mypersonalassistant.database.ToDoListService
 import com.example.mypersonalassistant.model.ToDoModel
 import com.example.mypersonalassistant.model.WeatherModel
 
 import kotlinx.android.synthetic.main.activity_to_do.*
+import java.security.AccessController.getContext
 
 class ToDoActivity : AppCompatActivity() {
 
     lateinit var toDoListService: ToDoListService
-    private var recyclerView: RecyclerView? = null
-    var result: ArrayList<ToDoModel> = ArrayList<ToDoModel>()
-    lateinit var adapter: ToDoListRecycleViewAdapter
-    lateinit var layoutManager: LinearLayoutManager
+
+    //ADAPTER TO DO
+    private var recyclerViewToDo: RecyclerView? = null
+    var resultToDo: ArrayList<ToDoModel> = ArrayList<ToDoModel>()
+    lateinit var adapterToDo: ToDoListRecycleViewAdapter
+    lateinit var layoutManagerToDo: LinearLayoutManager
+
+    //ADAPTER DONE
+    private var recyclerViewDone: RecyclerView? = null
+    var resultDone: ArrayList<ToDoModel> = ArrayList<ToDoModel>()
+    lateinit var adapterDone: ToDoListRecycleViewAdapter
+    lateinit var layoutManagerDone: LinearLayoutManager
 
     var fabAdd: FloatingActionButton? = null
 
@@ -40,16 +52,49 @@ class ToDoActivity : AppCompatActivity() {
 
         toDoListService = ToDoListService(this)
         toDoListService.open()
-        result = toDoListService.getAllToDoList()
+        resultToDo = toDoListService.getAllToDoList()
+        resultDone = toDoListService.getAllDoneList()
         toDoListService.close()
-        recyclerView = findViewById(R.id.todo_recycleview)
-        adapter = ToDoListRecycleViewAdapter(result)
-        layoutManager = LinearLayoutManager(applicationContext,LinearLayoutManager.VERTICAL,false)
-        recyclerView?.layoutManager = layoutManager
-        recyclerView?.itemAnimator = DefaultItemAnimator()
-        recyclerView?.adapter = adapter
-        adapter.notifyDataSetChanged()
 
+        //RECYCLE VIEW TO DO
+        recyclerViewToDo = findViewById(R.id.todo_recycleview)
+        adapterToDo = ToDoListRecycleViewAdapter(resultToDo, false, object : OnItemClickListener {
+            override fun onItemClick(item: ToDoModel) {
+                toDoListService.open()
+                toDoListService.changeItemsStatus(1,item.id)
+                adapterDone.list = toDoListService.getAllDoneList()
+                adapterToDo.list = toDoListService.getAllToDoList()
+                toDoListService.close()
+                adapterToDo.notifyDataSetChanged()
+                adapterDone.notifyDataSetChanged()
+            }
+        })
+        layoutManagerToDo = LinearLayoutManager(applicationContext,LinearLayoutManager.VERTICAL,false)
+        recyclerViewToDo?.layoutManager = layoutManagerToDo
+        recyclerViewToDo?.itemAnimator = DefaultItemAnimator()
+        recyclerViewToDo?.adapter = adapterToDo
+        adapterToDo.notifyDataSetChanged()
+
+        //RECYCLE VIEW DONE
+        recyclerViewDone = findViewById(R.id.done_recycleview)
+        adapterDone = ToDoListRecycleViewAdapter(resultDone, true, object : OnItemClickListener {
+            override fun onItemClick(item: ToDoModel) {
+                toDoListService.open()
+                toDoListService.changeItemsStatus(0,item.id)
+                adapterDone.list = toDoListService.getAllDoneList()
+                adapterToDo.list = toDoListService.getAllToDoList()
+                toDoListService.close()
+                adapterDone.notifyDataSetChanged()
+                adapterToDo.notifyDataSetChanged()
+            }
+        })
+        layoutManagerDone = LinearLayoutManager(applicationContext,LinearLayoutManager.VERTICAL,false)
+        recyclerViewDone?.layoutManager = layoutManagerDone
+        recyclerViewDone?.itemAnimator = DefaultItemAnimator()
+        recyclerViewDone?.adapter = adapterDone
+        adapterDone.notifyDataSetChanged()
+
+        //ADD TASK
         fabAdd = this.findViewById(R.id.fabAdd) as FloatingActionButton
         fabAdd!!.setOnClickListener {
             val inflater = this.layoutInflater
@@ -65,9 +110,9 @@ class ToDoActivity : AppCompatActivity() {
                 .setPositiveButton("Add") { dialog, id ->
                     toDoListService.open()
                     toDoListService.addItemToDoList(title.text.toString(),description.text.toString())
-                    adapter.list = toDoListService.getAllToDoList()
+                    adapterToDo.list = toDoListService.getAllToDoList()
                     toDoListService.close()
-                    adapter.notifyDataSetChanged()
+                    adapterToDo.notifyDataSetChanged()
                     dialog.cancel()
                 }
             val alert: AlertDialog = builder.create()

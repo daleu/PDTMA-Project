@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
-        xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/todo_card_view"
+        xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/done_card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -26,7 +26,7 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                     app:fontFamily="sans-serif" android:layout_marginStart="10dp"/>
             <Button
-                    android:text="DONE"
+                    android:text="TO DO"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" android:id="@+id/checkTask" android:layout_weight="1"/>
         </LinearLayout>
