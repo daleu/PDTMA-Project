@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.mypersonalassistant.R
 import com.example.mypersonalassistant.activity.CalendarActivity
+import com.example.mypersonalassistant.activity.ToDoActivity
 import com.example.mypersonalassistant.activity.WeatherActivity
 import com.example.mypersonalassistant.model.WeatherModel
 import java.util.*
@@ -79,12 +80,22 @@ class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>, val context:Con
                 context.startActivity(intent)
             }
         }
-        else {
+        else if(holder.itemViewType==1) {
             var holderCalendar: MainInfoViewCalendarHolder = holder as MainInfoViewCalendarHolder
             holderCalendar.button.setOnClickListener {
                 val intent = Intent(context, CalendarActivity::class.java)
                 context.startActivity(intent)
             }
+        }
+        else {
+            var toDoHolder: MainInfoViewToDoHolder = holder as MainInfoViewToDoHolder
+            toDoHolder.button.setOnClickListener {
+                val intent = Intent(context, ToDoActivity::class.java)
+                context.startActivity(intent)
+            }
+
+            //RECYCLE VIEW TO DO
+
         }
 
     }
@@ -99,16 +110,20 @@ class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>, val context:Con
             val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.content_main_card_view_weather,parent,false)
             return MainInfoViewWeatherHolder(itemView)
         }
-        else {
+        else if(viewType==1){
             val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.content_main_card_view_calendar,parent,false)
             return MainInfoViewCalendarHolder(itemView)
+        }
+        else {
+            val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.content_main_card_view_todo,parent,false)
+            return MainInfoViewToDoHolder(itemView)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         // Just as an example, return 0 or 2 depending on position
         // Note that unlike in ListView adapters, types don't have to be contiguous
-        return position % 2 * 2
+        return position % 3
     }
 
     class MainInfoViewCalendarHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -117,7 +132,18 @@ class MainRecyclerViewAdapter(val list: ArrayList<WeatherModel>, val context:Con
 
         init {
             cv = view.findViewById(R.id.calendar_card_view)
+            button = itemView.findViewById(R.id.explore)
+        }
+    }
 
+    class MainInfoViewToDoHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var cv: CardView
+        var button: Button
+        var recyclerView: RecyclerView
+
+        init {
+            cv = view.findViewById(R.id.calendar_card_view)
+            recyclerView = view.findViewById(R.id.todo_recycleview)
             button = itemView.findViewById(R.id.explore)
         }
     }

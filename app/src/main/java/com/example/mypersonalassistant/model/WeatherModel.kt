@@ -3,7 +3,7 @@ package com.example.mypersonalassistant.model
 import java.util.*
 
 class WeatherModel {
-    var name: String // Contains the name of the location (current location or current city)
+    var name: String
         get() = field
         set(value) {
             field = value
